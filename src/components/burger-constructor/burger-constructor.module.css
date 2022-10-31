@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  max-height: 912px;
+  padding-top: 100px;
+  flex-grow: 1;
+}
+
+.ingredients__container {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.constructor__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.drag__item__container {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 32px;
+  height: 44px;
+}
+
+.summ__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 40px;
+}
+
+.summ {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 9.5px;
+}
+
+.ingredients__container__wrapper {
+  width: auto;
+  max-height: 464px;
+  overflow: auto;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ingredients__container__wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ingredients__container__wrapper::-webkit-scrollbar-track {
+  background-color: #2F2F37;
+}
+
+.ingredients__container__wrapper::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}
