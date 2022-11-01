@@ -1,6 +1,7 @@
 import React from "react";
 import styles from './burger-constructor.module.css';
 import PropTypes from 'prop-types';
+import { ingredientType } from "../../utils/types";
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 export const BurgerConstructor = ({ingredientsData}) => {
@@ -47,7 +48,12 @@ const ConstructorItem = ({itemData, pos, isLocked, classNameAdd}) => {
       <ConstructorElement
         type={pos}
         isLocked={isLocked}
-        text={itemData.name}
+        text={
+          pos ? 
+          (pos === "top" ? itemData.name + " (верх)" : itemData.name + " (низ)") 
+          : 
+          itemData.name
+        }
         price={itemData.price}
         thumbnail={itemData.image}
       />
@@ -55,23 +61,13 @@ const ConstructorItem = ({itemData, pos, isLocked, classNameAdd}) => {
   )
 }
 
-export const itemPropTypes = PropTypes.shape({
-  _id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  proteins: PropTypes.number,
-  fat: PropTypes.number,
-  carbohydrates: PropTypes.number,
-  calories: PropTypes.number,
-  price: PropTypes.number.isRequired,
-  image: PropTypes.string.isRequired,
-  image_mobile: PropTypes.string.isRequired,
-  image_large: PropTypes.string.isRequired
-})
-
 ConstructorItem.propTypes = {
-  itemData: itemPropTypes.isRequired,
+  itemData: ingredientType.isRequired,
   pos: PropTypes.string,
   isLocked: PropTypes.bool,
   classNameAdd: PropTypes.string
+}
+
+BurgerConstructor.propTypes = {
+  ingredientsData: PropTypes.arrayOf(ingredientType).isRequired
 }

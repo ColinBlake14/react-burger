@@ -1,6 +1,7 @@
 import React from "react";
 import styles from './burger-ingredients.module.css';
-import { itemPropTypes } from "../burger-constructor/burger-constructor";
+import PropTypes from 'prop-types';
+import { ingredientType } from "../../utils/types";
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 
 export const BurgerIngredients = ({ingredientsData}) => {
@@ -13,7 +14,7 @@ export const BurgerIngredients = ({ingredientsData}) => {
         </p>
       </div>
 
-      <div style={{ display: 'flex' }}>
+      <div className={styles.tab__container}>
         <Tab value="one" active={current === 'one'} onClick={setCurrent}>
           Булки
         </Tab>
@@ -50,7 +51,21 @@ export const BurgerIngredients = ({ingredientsData}) => {
           })
           }
         </div>
+
+        <div className={`${styles.title} mt-10`}>
+          <p className="text text_type_main-medium">
+            Начинки
+          </p>
+        </div>
+
+        <div className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
+          {ingredientsData.filter(elem => elem.type === "main").map(item => {
+            return <IngredientCard ingredientData={item} key={item._id} />
+          })}
+        </div>
       </div>
+
+      
     </section>
   )
 }
@@ -58,7 +73,7 @@ export const BurgerIngredients = ({ingredientsData}) => {
 const IngredientCard = ({ingredientData}) => {
   return (
     <div className={styles.card}>
-      <img className={styles.card__img} src={ingredientData.image_large} alt="картинка"/>
+      <img className={styles.card__img} src={ingredientData.image_large} alt={ingredientData.name}/>
       <Counter className={styles.counter} count={1} size="default"/>
       <div className={`${styles.price} pt-1 pb-1`}>
         <p className="text text_type_digits-default">{ingredientData.price}</p>
@@ -74,5 +89,9 @@ const IngredientCard = ({ingredientData}) => {
 }
 
 IngredientCard.propTypes = {
-  ingredientData: itemPropTypes.isRequired
+  ingredientData: ingredientType.isRequired
+}
+
+BurgerIngredients.propTypes = {
+  ingredientsData: PropTypes.arrayOf(ingredientType).isRequired
 }

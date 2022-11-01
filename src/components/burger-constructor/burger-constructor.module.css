@@ -23,7 +23,7 @@
 .drag__item__container {
   display: flex;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
   width: 32px;
   height: 44px;
 }
@@ -31,7 +31,7 @@
 .summ__container {
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 40px;
 }
 
