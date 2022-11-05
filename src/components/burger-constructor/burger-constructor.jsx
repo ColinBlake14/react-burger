@@ -1,10 +1,22 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from './burger-constructor.module.css';
 import PropTypes from 'prop-types';
+import { OrderDetails } from "../order-details/order-details";
+import { Modal } from "../app-modal/app-modal";
 import { ingredientType } from "../../utils/types";
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 export const BurgerConstructor = ({ingredientsData}) => {
+  const [visible, setVisible] = useState(false);
+
+  function handleOpenModal(item) {
+    setVisible(true);
+  };
+
+  function handleCloseModal () {
+    setVisible(false);
+  };
+
   return (
     <section className={styles.container}>
       <div className={`${styles.ingredients__container}`}>
@@ -27,10 +39,16 @@ export const BurgerConstructor = ({ingredientsData}) => {
           <CurrencyIcon type="primary"/>
         </div>
 
-        <Button type="primary" size="large" htmlType="button">
+        <Button type="primary" size="large" htmlType="button" onClick={handleOpenModal}>
           Оформить заказ
         </Button>
       </div>
+
+      {visible && (
+        <Modal onClose={handleCloseModal}>
+          <OrderDetails orderId="034536"/>
+        </Modal>
+      )}
     </section>
   )
 }

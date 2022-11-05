@@ -35,3 +35,11 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.closeIcon__box {
+  width: 720px;
+  height: 120px;
+  display: flex;
+  align-items:flex-start;
+  justify-content: end;
+}
