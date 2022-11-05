@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
+import { IngredientDetails } from "../ingredient-details/ingredient-details";
+import { Modal } from "../app-modal/app-modal";
 import { ingredientType } from "../../utils/types";
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 
@@ -64,15 +66,29 @@ export const BurgerIngredients = ({ingredientsData}) => {
           })}
         </div>
       </div>
-
-      
     </section>
   )
 }
 
 const IngredientCard = ({ingredientData}) => {
+  const [visible, setVisible] = useState(false);
+
+  function handleOpenModal() {
+    setVisible(true);
+  };
+
+  function handleCloseModal () {
+    setVisible(false);
+  };
+
+  const modal = (
+    <Modal header="Детали ингредиента" onClose={handleCloseModal}>
+      <IngredientDetails ingredientData={ingredientData}/>
+    </Modal>
+  )
+
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={handleOpenModal}>
       <img className={styles.card__img} src={ingredientData.image_large} alt={ingredientData.name}/>
       <Counter className={styles.counter} count={1} size="default"/>
       <div className={`${styles.price} pt-1 pb-1`}>
@@ -84,6 +100,8 @@ const IngredientCard = ({ingredientData}) => {
           {ingredientData.name}
         </p>
       </div>
+
+      {visible && modal}
     </div>
   )
 }

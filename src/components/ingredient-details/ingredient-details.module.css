@@ -1,0 +1,35 @@
+.modal__card__img {
+  max-width: 480px;
+  max-height: 240px;
+}
+
+.modal__ingredient__name {
+  max-width: 520px;
+  text-align: center;
+}
+
+.modal__ingredient__add__container {
+  width: 520px;
+  height: 56px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.modal__ingredient__add {
+  width: 112px;
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.modal__ingredient__big__add {
+  width: 120px;
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
