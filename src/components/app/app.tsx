@@ -12,16 +12,22 @@ function App() {
     ingredients: []
   });
 
-  useEffect(() => {
+  const getData = () => {
     setState({ ...state, hasError: false, isLoading: true });
 
-    getIngredients().then((res) => {
-      if (res) {
-        setState({ ingredients: res, hasError: false, isLoading: false });
-      } else {
-        setState({ ...state, hasError: true, isLoading: false });
-      }
-    });
+    try {
+      getIngredients().then(res => {
+        if (res) {
+          setState({ ingredients: res, hasError: false, isLoading: false });
+        }
+      })
+    } catch (err) {
+      setState({ ...state, hasError: true, isLoading: false });
+    }
+  }
+
+  useEffect(() => {  
+    getData();
   }, []);
 
   return (

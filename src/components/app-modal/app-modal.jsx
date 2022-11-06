@@ -8,16 +8,16 @@ import { useEffect } from 'react';
 const modalRoot = document.getElementById("modalRoot");
 
 export const Modal = ({header, children, onClose}) => {
-  const keydownHandler = ({ key }) => {
-    switch (key) {
-      case 'Escape':
-        onClose();
-        break;
-      default:
-    }
-  };
-
   useEffect(() => {
+    const keydownHandler = ({ key }) => {
+      switch (key) {
+        case 'Escape':
+          onClose();
+          break;
+        default:
+      }
+    };
+
     document.addEventListener('keydown', keydownHandler);
 
     return () => document.removeEventListener('keydown', keydownHandler);

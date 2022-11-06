@@ -1,13 +1,10 @@
 const URL_API = 'https://norma.nomoreparties.space/api/ingredients';
 
 export const getIngredients = async () => {
-  try {
-    const res = await fetch(URL_API);
+  const res = await fetch(URL_API);
+  if (res.ok) {
     const json = await res.json();
-
     return json.data;
-  } catch (err) {
-    console.log('ERR: ', err);
-    return;
   }
+  return Promise.reject(`Ошибка ${res.status}`);
 }
