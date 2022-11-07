@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
+import { IngredientDetails } from "../ingredient-details/ingredient-details";
+import { Modal } from "../app-modal/app-modal";
 import { ingredientType } from "../../utils/types";
 import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
 
 export const BurgerIngredients = ({ingredientsData}) => {
   const [current, setCurrent] = React.useState('one');
+  const [visible, setVisible] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
+
+  function handleOpenModal(item) {
+    setCurrentItem(item);
+    setVisible(true);
+  };
+
+  function handleCloseModal () {
+    setVisible(false);
+  };
+
   return (
     <section className={styles.container}>
       <div className={`${styles.title} mt-10 mb-5`}>
@@ -35,7 +49,7 @@ export const BurgerIngredients = ({ingredientsData}) => {
 
         <div className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
           {ingredientsData.filter(elem => elem.type === "bun").map(item => {
-            return <IngredientCard ingredientData={item} key={item._id} />
+            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
           })}
         </div>
 
@@ -47,7 +61,7 @@ export const BurgerIngredients = ({ingredientsData}) => {
 
         <div className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
           {ingredientsData.filter(elem => elem.type === "sauce").map(item => {
-            return <IngredientCard ingredientData={item} key={item._id} />
+            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
           })
           }
         </div>
@@ -60,19 +74,27 @@ export const BurgerIngredients = ({ingredientsData}) => {
 
         <div className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
           {ingredientsData.filter(elem => elem.type === "main").map(item => {
-            return <IngredientCard ingredientData={item} key={item._id} />
+            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
           })}
         </div>
       </div>
 
-      
+      {visible && (
+        <Modal header="Детали ингредиента" onClose={handleCloseModal}>
+          <IngredientDetails ingredientData={currentItem}/>
+        </Modal>
+      )}
     </section>
   )
 }
 
-const IngredientCard = ({ingredientData}) => {
+const IngredientCard = ({ingredientData, handleOpenModal}) => {
+  const onCardClick = () => {
+    handleOpenModal(ingredientData);
+  };
+
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={onCardClick}>
       <img className={styles.card__img} src={ingredientData.image_large} alt={ingredientData.name}/>
       <Counter className={styles.counter} count={1} size="default"/>
       <div className={`${styles.price} pt-1 pb-1`}>
@@ -83,13 +105,14 @@ const IngredientCard = ({ingredientData}) => {
         <p className="text text_type_main-default">
           {ingredientData.name}
         </p>
-      </div>
+      </div>   
     </div>
   )
 }
 
 IngredientCard.propTypes = {
-  ingredientData: ingredientType.isRequired
+  ingredientData: ingredientType.isRequired,
+  handleOpenModal: PropTypes.func.isRequired
 }
 
 BurgerIngredients.propTypes = {
