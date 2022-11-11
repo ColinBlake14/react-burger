@@ -1,3 +1,11 @@
+:root {
+  --background-element: #2f2f37;
+  --empty-bun-pudding: 16px 24px;
+  --empty-bun-width: 536px;
+  --empty-bun-height: 80px;
+  --empty-bun-ml: 48px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -63,4 +71,27 @@
 
 .ingredients__container__wrapper::-webkit-scrollbar-thumb {
   background-color: #8585AD;
+}
+
+.empty__bun {
+  width: var(--empty-bun-width);
+  height: var(--empty-bun-height);
+  margin-left: var(--empty-bun-ml);
+  background: var(--background-element);
+  padding: var(--empty-bun-pudding);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty__top__bun {
+  border-radius: 88px 88px 40px 40px;
+}
+
+.empty__middle__bun {
+  border-radius: 40px 40px 40px 40px;
+}
+
+.empty__bottom__bun {
+  border-radius: 40px 40px 88px 88px;
 }
