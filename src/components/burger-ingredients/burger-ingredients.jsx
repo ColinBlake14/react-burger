@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
 import { IngredientDetails } from "../ingredient-details/ingredient-details";
@@ -14,8 +14,30 @@ export const BurgerIngredients = () => {
   const [current, setCurrent] = React.useState('one');
   const [visible, setVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+
+  const bunSection = useRef(null);
+  const sauceSection = useRef(null);
+  const mainSection = useRef(null);
   
   const { ingredientsData } = React.useContext(IngredientsContext);
+
+  function scrollToSection(num) {
+    switch (num) {
+      case 1:
+        setCurrent('one');
+        bunSection.current.scrollIntoView({ behavior: "smooth" });
+        break;
+      case 2:
+        setCurrent('two');
+        sauceSection.current.scrollIntoView({ behavior: "smooth" });
+        break;
+      case 3:
+        setCurrent('three');
+        mainSection.current.scrollIntoView({ behavior: "smooth" });
+        break;
+      default: break;
+    }
+  }
 
   const [ref1] = useInView({
     threshold: 0,
@@ -61,20 +83,20 @@ export const BurgerIngredients = () => {
       </div>
 
       <div className={styles.tab__container}>
-        <Tab value="one" active={current === 'one'} onClick={setCurrent}>
+        <Tab value="one" active={current === 'one'} onClick={() => scrollToSection(1)}>
           Булки
         </Tab>
-        <Tab value="two" active={current === 'two'} onClick={setCurrent}>
+        <Tab value="two" active={current === 'two'} onClick={() => scrollToSection(2)}>
           Соусы
         </Tab>
-        <Tab value="three" active={current === 'three'} onClick={setCurrent}>
+        <Tab value="three" active={current === 'three'} onClick={() => scrollToSection(3)}>
           Начинки
         </Tab>
       </div>
 
       <div className={styles.ingredients__container}>
-        <div ref={ref1} className={`${styles.title} mt-10`}>
-          <p className="text text_type_main-medium">
+        <div ref={bunSection} className={`${styles.title} mt-10`}>
+          <p ref={ref1} className="text text_type_main-medium">
             Булки
           </p>
         </div>
@@ -85,8 +107,8 @@ export const BurgerIngredients = () => {
           })}
         </div>
 
-        <div ref={ref2} className={`${styles.title} mt-10`}>
-          <p className="text text_type_main-medium">
+        <div ref={sauceSection} className={`${styles.title} mt-10`}>
+          <p ref={ref2} className="text text_type_main-medium">
             Соусы
           </p>
         </div>
@@ -98,8 +120,8 @@ export const BurgerIngredients = () => {
           }
         </div>
 
-        <div ref={ref3} className={`${styles.title} mt-10`}>
-          <p className="text text_type_main-medium">
+        <div ref={mainSection} className={`${styles.title} mt-10`}>
+          <p ref={ref3} className="text text_type_main-medium">
             Начинки
           </p>
         </div>
@@ -156,6 +178,7 @@ const IngredientCard = ({ingredientData, handleOpenModal}) => {
       image: ingredientData.image,
       uuid: uuidv4()
     };
+    
     if (ingredientData.type === "bun") {
       constructorDataDispatcher({type: 'set bun', payload: ingredientToConstructor});
     } else {

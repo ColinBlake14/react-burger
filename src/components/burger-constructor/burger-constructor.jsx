@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useState, useMemo } from "react";
 import styles from './burger-constructor.module.css';
 import PropTypes from 'prop-types';
 import { OrderDetails } from "../order-details/order-details";
@@ -13,7 +13,8 @@ export const BurgerConstructor = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [orderNum, setOrderNum] = useState(0);
 
-  const { constructorData } = React.useContext(ConstructorContext);
+  const { constructorData, constructorDataDispatcher } = React.useContext(ConstructorContext);
+  const { ingredientsData, setIngredientsData } = React.useContext(IngredientsContext);
 
   function handleOpenModal() {
     if (constructorData.bun && constructorData.ingredients.length) {
@@ -25,9 +26,23 @@ export const BurgerConstructor = () => {
       
       try {
         postOrder(orderIds).then(res => {
-          setOrderNum(res.order.number);
           setVisible(true);
-        })
+          setOrderNum(res.order.number);
+        }).then(() => {
+          constructorDataDispatcher({type: 'reset'});
+
+          const oldIngredients = [...ingredientsData.ingredients];
+
+          setIngredientsData({
+            ...ingredientsData,
+            ingredients: 
+              oldIngredients.map(ingredient => {
+                ingredient.__v = 0;
+                
+                return ingredient;
+              })
+          });
+        });
       } catch (err) {
         console.log('ERR ', err);
       }
@@ -39,20 +54,17 @@ export const BurgerConstructor = () => {
     setVisible(false);
   };
 
-  useEffect(() => {
-    const changePrice = () => {
-      let sum = 0;
+  useMemo(() => {
+    let sum = 0;
       if (constructorData.ingredients.length) {
         sum += constructorData.ingredients.reduce((acc, curVal) => acc + curVal.price, 0);
       }
       if (constructorData.bun) {
         sum += constructorData.bun.price * 2;
       }
-      setTotalPrice(sum);
-    };
 
-    changePrice();
-  }, [constructorData]);
+      setTotalPrice(sum);
+  }, [constructorData])
 
   return (
     <section className={styles.container}>

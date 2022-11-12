@@ -7,7 +7,11 @@ export const OrderDetails = ({orderId}) => {
   return (
     <>
       <div className={`${styles.id__box} mb-8`}>
-        <p className="text text_type_digits-large">{orderId}</p>
+        {orderId ? 
+          <p className="text text_type_digits-large">{orderId}</p>
+          :
+          <p className="text text_type_main-medium">Загрузка...</p>
+        }
       </div>
 
       <div className={`${styles.id__name__box} mb-15`}>
@@ -19,7 +23,11 @@ export const OrderDetails = ({orderId}) => {
       </div>
 
       <div className={`${styles.text__box} mt-15 mb-2`}>
-        <p className="text text_type_main-default">Ваш заказ начали готовить</p>
+        {orderId ? 
+          <p className="text text_type_main-default">Ваш заказ начали готовить</p>
+          :
+          <p className="text text_type_main-medium">Ваш заказ скоро начнут готовить</p>
+        }
       </div>
 
       <div className={`${styles.text__box} mb-30`}>
