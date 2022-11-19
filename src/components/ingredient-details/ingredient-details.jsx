@@ -1,8 +1,10 @@
 import React from "react"
 import styles from './ingredient-details.module.css';
-import { ingredientType } from "../../utils/types";
+import { useSelector } from 'react-redux';
 
-export const IngredientDetails = ({ingredientData}) => {
+export const IngredientDetails = () => {
+  const ingredientData = useSelector(store => store.ingredients.modalData);
+
   return (
     <>
       <img className={`${styles.modal__card__img} mb-4`} 
@@ -48,8 +50,4 @@ export const IngredientDetails = ({ingredientData}) => {
       </div>
     </>
   )
-}
-
-IngredientDetails.propTypes = {
-  ingredientData: ingredientType.isRequired
 }

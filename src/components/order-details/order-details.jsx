@@ -1,16 +1,24 @@
 import React from "react"
 import styles from './order-details.module.css';
-import PropTypes from 'prop-types';
 import orderAcceptedImg from "../../images/orderAccepted.png";
+import { useSelector } from 'react-redux';
 
-export const OrderDetails = ({orderId}) => {
+export const OrderDetails = () => {
+  const { orderNum, isLoading, hasError, hasData } = useSelector(store => store.bconstructor)
+
   return (
     <>
       <div className={`${styles.id__box} mb-8`}>
-        {orderId ? 
-          <p className="text text_type_digits-large">{orderId}</p>
+        {hasData ? 
+          <p className="text text_type_digits-large">{orderNum}</p>
           :
+          isLoading ?
           <p className="text text_type_main-medium">Загрузка...</p>
+          :
+          hasError ?
+          <p className="text text_type_main-medium">Ошибка получения номера заказа</p>
+          :
+          <p className="text text_type_main-medium">Непредвиденная ошибка ...</p>
         }
       </div>
 
@@ -23,7 +31,7 @@ export const OrderDetails = ({orderId}) => {
       </div>
 
       <div className={`${styles.text__box} mt-15 mb-2`}>
-        {orderId ? 
+        {orderNum ? 
           <p className="text text_type_main-default">Ваш заказ начали готовить</p>
           :
           <p className="text text_type_main-medium">Ваш заказ скоро начнут готовить</p>
@@ -35,8 +43,4 @@ export const OrderDetails = ({orderId}) => {
       </div>
     </>
   )
-}
-
-OrderDetails.propTypes = {
-  orderId: PropTypes.number.isRequired
 }

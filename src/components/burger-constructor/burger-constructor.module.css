@@ -51,6 +51,7 @@
 }
 
 .ingredients__container__wrapper {
+  border: 2px solid transparent;
   width: auto;
   max-height: 464px;
   overflow: auto;
@@ -74,6 +75,7 @@
 }
 
 .empty__bun {
+  border: 2px solid transparent;
   width: var(--empty-bun-width);
   height: var(--empty-bun-height);
   margin-left: var(--empty-bun-ml);
@@ -94,4 +96,8 @@
 
 .empty__bottom__bun {
   border-radius: 40px 40px 88px 88px;
+}
+
+.hovered {
+  border-color: #4c4cff;
 }
