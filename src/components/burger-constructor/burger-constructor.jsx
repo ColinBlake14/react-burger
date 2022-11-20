@@ -1,115 +1,172 @@
 import React, { useState, useMemo } from "react";
 import styles from './burger-constructor.module.css';
-import PropTypes from 'prop-types';
 import { OrderDetails } from "../order-details/order-details";
 import { Modal } from "../app-modal/app-modal";
-import { constructorIngredientType } from "../../utils/types";
-import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { ConstructorContext, IngredientsContext } from "../../utils/app-context";
-import { postOrder } from '../../utils/api';
+import { getOrderNum } from "../../services/actions/burger-constructor";
+import { useDispatch, useSelector } from 'react-redux';
+import { useDrop } from "react-dnd";
+import { ConstructorItem } from "../constructor-item/constructor-item";
+
+import { 
+  Button, 
+  CurrencyIcon 
+} from '@ya.praktikum/react-developer-burger-ui-components'
+
+import { 
+  RESET_INGREDIENTS, 
+  RESET_MODAL_NUM_DATA,
+  SET_INGREDIENT,
+  SET_BUN
+} from "../../services/actions/burger-constructor";
+
+import { 
+  RESET_INGREDIENTS_COUNT,
+  RESET_BUNS_COUNT,
+  INCREASE_ITEM
+} from "../../services/actions/burger-ingredients";
 
 export const BurgerConstructor = () => {
-  const [visible, setVisible] = useState(false);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [orderNum, setOrderNum] = useState(0);
+  const dispatch = useDispatch();
 
-  const { constructorData, constructorDataDispatcher } = React.useContext(ConstructorContext);
-  const { ingredientsData, setIngredientsData } = React.useContext(IngredientsContext);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const { bun , ingredients, isModalVisible } = useSelector(store => store.bconstructor);
+
+  const [{isHoverIngredient}, dropIngredient] = useDrop({
+    accept: "ingredient",
+    drop(item) {
+      dispatch({ type: INCREASE_ITEM, _id: item._id });
+      dispatch({ type: SET_INGREDIENT, ingredient: item });
+    },
+    collect: monitor => ({
+      isHoverIngredient: monitor.isOver(),
+    })
+  });
+
+  const [{isHoverBun}, dropBun] = useDrop({
+    accept: "bun",
+    drop(item) {
+      dispatch({ type: RESET_BUNS_COUNT });
+      dispatch({ type: INCREASE_ITEM, _id: item._id });
+      dispatch({ type: SET_BUN, bun: item });
+    },
+    collect: monitor => ({
+      isHoverBun: monitor.isOver(),
+    })
+  });
 
   function handleOpenModal() {
-    if (constructorData.bun && constructorData.ingredients.length) {
-      let orderIds = constructorData.ingredients.map(item => item._id);
-      orderIds.push(constructorData.bun._id);
+    if (bun && ingredients.length) {
+      let orderIds = ingredients.map(item => item._id);
+      orderIds.push(bun._id);
       orderIds = { 
         ingredients: [...orderIds]
       };
       
-      try {
-        postOrder(orderIds).then(res => {
-          setVisible(true);
-          setOrderNum(res.order.number);
-        }).then(() => {
-          constructorDataDispatcher({type: 'reset'});
-
-          const oldIngredients = [...ingredientsData.ingredients];
-
-          setIngredientsData({
-            ...ingredientsData,
-            ingredients: 
-              oldIngredients.map(ingredient => {
-                ingredient.__v = 0;
-                
-                return ingredient;
-              })
-          });
-        });
-      } catch (err) {
-        console.log('ERR ', err);
-      }
-      return orderNum;
+      dispatch({ type: RESET_INGREDIENTS });
+      dispatch({ type: RESET_INGREDIENTS_COUNT });
+      dispatch(getOrderNum(orderIds));
     }
   };
 
   function handleCloseModal() {
-    setVisible(false);
+    dispatch({ type: RESET_MODAL_NUM_DATA });
   };
 
   useMemo(() => {
     let sum = 0;
-      if (constructorData.ingredients.length) {
-        sum += constructorData.ingredients.reduce((acc, curVal) => acc + curVal.price, 0);
+      if (ingredients.length) {
+        sum += ingredients.reduce((acc, curVal) => acc + curVal.price, 0);
       }
-      if (constructorData.bun) {
-        sum += constructorData.bun.price * 2;
+      if (bun) {
+        sum += bun.price * 2;
       }
 
       setTotalPrice(sum);
-  }, [constructorData])
+  }, [ingredients, bun])
+
+  const topBunContent = useMemo(() => {
+    return bun ? (
+      <ConstructorItem classNameAdd="pr-4 pl-4" itemData={bun}
+        key={bun._id} pos="top" isLocked={true}/>
+    )
+    :
+    (
+      <div className={
+          isHoverBun ?
+          `${styles.empty__bun} ${styles.empty__top__bun} ${styles.hovered}`
+          :
+          `${styles.empty__bun} ${styles.empty__top__bun}`
+        }>
+        <p className="text text_type_main-default">
+          Выберите булку для вашего бургера
+        </p>
+      </div>
+    )
+  },[bun, isHoverBun]);
+
+  const ingredientsContent = useMemo(() => {
+    return ingredients.length ? (
+      <div 
+        className={
+          isHoverIngredient ? 
+          `${styles.ingredients__container__wrapper} ${styles.hovered} pr-2 pl-4` 
+          :
+          `${styles.ingredients__container__wrapper} pr-2 pl-4`
+        } 
+        ref={dropIngredient}
+      >
+        {ingredients.map((item, index) => {
+          return <ConstructorItem itemData={item} key={item.uuid} index={index} id={item.uuid}/>
+        })}
+      </div>
+    )
+    :
+    (
+      <div 
+        className={
+          isHoverIngredient ? 
+          `${styles.empty__bun} ${styles.empty__middle__bun} ${styles.hovered}`
+          :
+          `${styles.empty__bun} ${styles.empty__middle__bun}`
+        } 
+        ref={dropIngredient}
+      >
+        <p className="text text_type_main-default">
+          Начинка тоже не помешает
+        </p>
+      </div>
+    )
+  }, [ingredients, isHoverIngredient, dropIngredient]);
+
+  const bottomBunContent = useMemo(() => {
+    return bun ? (
+      <ConstructorItem classNameAdd="pr-4 pl-4" itemData={bun}
+        pos="bottom" isLocked={true}/>
+    )
+    :
+    (
+      <div className={
+          isHoverBun ?
+          `${styles.empty__bun} ${styles.empty__bottom__bun} ${styles.hovered}`
+          :
+          `${styles.empty__bun} ${styles.empty__bottom__bun}`
+        }>
+        <p className="text text_type_main-default">
+          Брат булки сверху (только снизу)
+        </p>
+      </div>
+    )
+  }, [bun, isHoverBun]);
 
   return (
     <section className={styles.container}>
-      <div className={`${styles.ingredients__container}`}>
-        {constructorData.bun ? (
-          <ConstructorItem classNameAdd="pr-4 pl-4" itemData={constructorData.bun}
-            key={constructorData.bun._id} pos="top" isLocked={true}/>
-        )
-        :
-        (
-          <div className={`${styles.empty__bun} ${styles.empty__top__bun}`}>
-            <p className="text text_type_main-default">
-              Выберите булку для вашего бургера
-            </p>
-          </div>
-        )}
+      <div className={`${styles.ingredients__container}`} ref={dropBun}>
+        {topBunContent}
         
-        {constructorData.ingredients.length ? (
-          <div className={`${styles.ingredients__container__wrapper} pr-2 pl-4`}>
-            {constructorData.ingredients.map(item => {
-              return <ConstructorItem itemData={item} key={item.uuid}/>
-            })}
-          </div>
-        )
-        :
-        (
-          <div className={`${styles.empty__bun} ${styles.empty__middle__bun}`}>
-            <p className="text text_type_main-default">
-              Начинка тоже не помешает
-            </p>
-          </div>
-        )}
+        {ingredientsContent}
         
-        {constructorData.bun ? (
-          <ConstructorItem classNameAdd="pr-4 pl-4" itemData={constructorData.bun}
-            pos="bottom" isLocked={true}/>
-        )
-        :
-        (
-          <div className={`${styles.empty__bun} ${styles.empty__bottom__bun}`}>
-            <p className="text text_type_main-default">
-              Брат булки сверху (только снизу)
-            </p>
-          </div>
-        )}
+        {bottomBunContent}
       </div>
 
       <div className={`${styles.summ__container} mt-10 ml-4 mr-4`}>
@@ -123,69 +180,11 @@ export const BurgerConstructor = () => {
         </Button>
       </div>
 
-      {visible && (
+      {isModalVisible && (
         <Modal onClose={handleCloseModal}>
-          <OrderDetails orderId={orderNum}/>
+          <OrderDetails/>
         </Modal>
       )}
     </section>
   )
-}
-
-const ConstructorItem = ({itemData, pos, isLocked, classNameAdd}) => {
-  const { constructorDataDispatcher } = React.useContext(ConstructorContext);
-  const { ingredientsData, setIngredientsData } = React.useContext(IngredientsContext);
-
-  const onClick = () => {
-    if (itemData.type === "bun") {
-      constructorDataDispatcher({type: 'delete bun'});
-    } else {
-      constructorDataDispatcher({type: 'delete ingredient', payload: itemData.uuid});
-    }
-
-    const oldIngredients = [...ingredientsData.ingredients];
-
-    setIngredientsData({
-      ...ingredientsData,
-      ingredients: 
-        oldIngredients.map(ingredient => {
-          if (ingredient._id === itemData._id) {
-            ingredient.__v -= 1;
-            return ingredient;
-          }
-          return ingredient;
-        })
-    })
-  }
-
-  return (
-    <div className={`${styles.constructor__item} ${classNameAdd}`} onClick={onClick}>
-      {isLocked ? 
-      (<div className={styles.drag__item__container}/>)
-      : 
-      (<div className={styles.drag__item__container}>
-        <DragIcon type="primary" />
-      </div>)
-      }
-      <ConstructorElement
-        type={pos}
-        isLocked={isLocked}
-        text={
-          pos ? 
-          (pos === "top" ? itemData.name + " (верх)" : itemData.name + " (низ)") 
-          : 
-          itemData.name
-        }
-        price={itemData.price}
-        thumbnail={itemData.image}
-      />
-    </div>
-  )
-}
-
-ConstructorItem.propTypes = {
-  itemData: constructorIngredientType.isRequired,
-  pos: PropTypes.string,
-  isLocked: PropTypes.bool,
-  classNameAdd: PropTypes.string
 }

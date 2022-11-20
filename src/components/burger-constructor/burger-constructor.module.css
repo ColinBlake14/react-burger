@@ -22,20 +22,6 @@
   gap: 16px;
 }
 
-.constructor__item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.drag__item__container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 32px;
-  height: 44px;
-}
-
 .summ__container {
   display: flex;
   flex-direction: row;
@@ -51,6 +37,7 @@
 }
 
 .ingredients__container__wrapper {
+  border: 2px solid transparent;
   width: auto;
   max-height: 464px;
   overflow: auto;
@@ -74,6 +61,7 @@
 }
 
 .empty__bun {
+  border: 2px solid transparent;
   width: var(--empty-bun-width);
   height: var(--empty-bun-height);
   margin-left: var(--empty-bun-ml);
@@ -94,4 +82,8 @@
 
 .empty__bottom__bun {
   border-radius: 40px 40px 88px 88px;
+}
+
+.hovered {
+  border-color: #4c4cff;
 }

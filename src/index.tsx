@@ -4,13 +4,24 @@ import './index.css';
 import App from './components/app/app';
 import reportWebVitals from './reportWebVitals';
 import '@ya.praktikum/react-developer-burger-ui-components';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import { rootReducer } from './services/reducers';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+
+export type IRootState = ReturnType<typeof rootReducer>;
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 
