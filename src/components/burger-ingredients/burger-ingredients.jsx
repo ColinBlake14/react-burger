@@ -9,14 +9,13 @@ import { useInView } from "react-intersection-observer";
 import { useDispatch, useSelector } from 'react-redux';
 import { getItems } from "../../services/actions/burger-ingredients";
 import { useDrag } from "react-dnd";
+import { v4 as uuidv4 } from "uuid";
 
 import { 
   SET_MODAL_DATA, 
   RESET_MODAL_DATA,
   SET_CURRENT_TAB
 } from "../../services/actions/burger-ingredients";
-
-const { v4: uuidv4 } = require('uuid');
 
 export const BurgerIngredients = () => {
   const dispatch = useDispatch();
@@ -52,7 +51,7 @@ export const BurgerIngredients = () => {
         break;
       default: break;
     }
-  }
+  };
 
   const [ref1] = useInView({
     threshold: 0,
@@ -88,6 +87,65 @@ export const BurgerIngredients = () => {
     dispatch({ type: RESET_MODAL_DATA});
   };
 
+  const tabContent = useMemo(() => {
+    return (
+      <div className={styles.tab__container}>
+        <Tab value="one" active={currentTab === 'one'} onClick={() => scrollToSection(1)}>
+          Булки
+        </Tab>
+        <Tab value="two" active={currentTab === 'two'} onClick={() => scrollToSection(2)}>
+          Соусы
+        </Tab>
+        <Tab value="three" active={currentTab === 'three'} onClick={() => scrollToSection(3)}>
+          Начинки
+        </Tab>
+      </div>
+    )
+  }, [currentTab]);
+
+  const ingredientsContent = useMemo(() => {
+    return (
+      <div className={styles.ingredients__container}>
+        <div ref={bunSection} className={`${styles.title} mt-10`}>
+          <p ref={ref1} className="text text_type_main-medium">
+            Булки
+          </p>
+        </div>
+
+        <div ref={ref1} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
+          {ingredientsData.filter(elem => elem.type === "bun").map(item => {
+            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
+          })}
+        </div>
+
+        <div ref={sauceSection} className={`${styles.title} mt-10`}>
+          <p ref={ref2} className="text text_type_main-medium">
+            Соусы
+          </p>
+        </div>
+
+        <div ref={ref2} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
+          {ingredientsData.filter(elem => elem.type === "sauce").map(item => {
+            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
+          })
+          }
+        </div>
+
+        <div ref={mainSection} className={`${styles.title} mt-10`}>
+          <p ref={ref3} className="text text_type_main-medium">
+            Начинки
+          </p>
+        </div>
+
+        <div ref={ref3} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
+          {ingredientsData.filter(elem => elem.type === "main").map(item => {
+            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
+          })}
+        </div>
+      </div>
+    )
+  }, [ingredientsData, ref1, ref2, ref3]);
+
   const content = useMemo(() => {
     return hasData ? (
       <>
@@ -97,61 +155,14 @@ export const BurgerIngredients = () => {
           </p>
         </div>
 
-        <div className={styles.tab__container}>
-          <Tab value="one" active={currentTab === 'one'} onClick={() => scrollToSection(1)}>
-            Булки
-          </Tab>
-          <Tab value="two" active={currentTab === 'two'} onClick={() => scrollToSection(2)}>
-            Соусы
-          </Tab>
-          <Tab value="three" active={currentTab === 'three'} onClick={() => scrollToSection(3)}>
-            Начинки
-          </Tab>
-        </div>
+        {tabContent}
 
-        <div className={styles.ingredients__container}>
-          <div ref={bunSection} className={`${styles.title} mt-10`}>
-            <p ref={ref1} className="text text_type_main-medium">
-              Булки
-            </p>
-          </div>
-
-          <div ref={ref1} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
-            {ingredientsData.filter(elem => elem.type === "bun").map(item => {
-              return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
-            })}
-          </div>
-
-          <div ref={sauceSection} className={`${styles.title} mt-10`}>
-            <p ref={ref2} className="text text_type_main-medium">
-              Соусы
-            </p>
-          </div>
-
-          <div ref={ref2} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
-            {ingredientsData.filter(elem => elem.type === "sauce").map(item => {
-              return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
-            })
-            }
-          </div>
-
-          <div ref={mainSection} className={`${styles.title} mt-10`}>
-            <p ref={ref3} className="text text_type_main-medium">
-              Начинки
-            </p>
-          </div>
-
-          <div ref={ref3} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
-            {ingredientsData.filter(elem => elem.type === "main").map(item => {
-              return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
-            })}
-          </div>
-        </div>
+        {ingredientsContent}
       </>
     ) : (
       <p className="text text_type_main-medium">Данные не были получены</p>
     )
-  }, [hasData, ingredientsData, ref1, ref2, ref3, currentTab]
+  }, [hasData, tabContent, ingredientsContent]
   );
 
   return (
@@ -181,28 +192,7 @@ const IngredientCard = ({ingredientData, handleOpenModal}) => {
   });
 
   const onCardClick = () => {
-    /*if (ingredientData.type === "bun") {
-      dispatch({ type: RESET_BUNS_COUNT });
-    }
-
-    dispatch({ type: INCREASE_ITEM, _id: ingredientData._id });*/
-
     handleOpenModal(ingredientData);
-
-    /*const ingredientToConstructor = {
-      _id: ingredientData._id,
-      name: ingredientData.name,
-      type: ingredientData.type,
-      price: ingredientData.price,
-      image: ingredientData.image,
-      uuid: uuidv4()
-    };*/
-    
-    /*if (ingredientData.type === "bun") {
-      dispatch({ type: SET_BUN, bun: ingredientToConstructor });
-    } else {
-      dispatch({ type: SET_INGREDIENT, ingredient: ingredientToConstructor });
-    }*/
   };
 
   return (

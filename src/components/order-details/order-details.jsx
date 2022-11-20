@@ -1,10 +1,13 @@
-import React from "react"
+import React from "react";
 import styles from './order-details.module.css';
 import orderAcceptedImg from "../../images/orderAccepted.png";
 import { useSelector } from 'react-redux';
 
 export const OrderDetails = () => {
   const { orderNum, isLoading, hasError, hasData } = useSelector(store => store.bconstructor)
+  const loadingText = 'Загрузка...';
+  const errorText = 'Ошибка получения номера заказа';
+  const unknowErrorText = 'Непредвиденная ошибка ...';
 
   return (
     <>
@@ -12,13 +15,9 @@ export const OrderDetails = () => {
         {hasData ? 
           <p className="text text_type_digits-large">{orderNum}</p>
           :
-          isLoading ?
-          <p className="text text_type_main-medium">Загрузка...</p>
-          :
-          hasError ?
-          <p className="text text_type_main-medium">Ошибка получения номера заказа</p>
-          :
-          <p className="text text_type_main-medium">Непредвиденная ошибка ...</p>
+          <p className="text text_type_main-medium">{
+              isLoading ? loadingText : hasError ? errorText : unknowErrorText
+            }</p>
         }
       </div>
 
