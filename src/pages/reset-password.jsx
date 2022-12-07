@@ -1,11 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from './pages.module.css';
 import { PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetPasswordRequest } from "../services/actions/forgot-reset-pass";
+import { useHistory } from 'react-router-dom'; 
 
 export const ResetPassword = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const {forgotPasswordSuccess, resetPasswordSuccess, resetPasswordError} = useSelector(store => store.forgotResetPass);
+
   const [codeValue, setCodeValue] = React.useState('');
   const [passValue, setPassValue] = React.useState('');
+
+  const submit = e => {
+    e.preventDefault();
+    const userData = {
+      password: passValue,
+      token: codeValue
+    }
+    dispatch(resetPasswordRequest(userData));
+    setCodeValue('');
+    setPassValue('');
+  };
+
+  useEffect (() => {
+    if (!forgotPasswordSuccess) {
+      history.replace({ pathname: '/' });
+    }
+    if (resetPasswordSuccess) {
+      history.replace({ pathname: '/login' });
+    }
+  }, [resetPasswordSuccess, forgotPasswordSuccess, history]);
 
   return (
     <div className={styles.container}>
@@ -15,7 +43,7 @@ export const ResetPassword = () => {
         </p>
       </div>
 
-      <form className={styles.form__container}>
+      <form onSubmit={submit} className={styles.form__container}>
         <PasswordInput
           placeholder="Введите новый пароль"
           onChange={e => setPassValue(e.target.value)}
@@ -41,6 +69,10 @@ export const ResetPassword = () => {
             Сохранить
           </Button>
         </div>
+
+        {resetPasswordError && (<p className={`${styles.error__text} text text_type_main-default text_color_inactive mt-6`}>
+          Введите правильный код подтверждения.
+        </p>)}
       </form>
 
       <div className={`${styles.text__container} mb-4`}>

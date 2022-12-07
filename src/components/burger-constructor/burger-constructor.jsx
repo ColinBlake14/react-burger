@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from "react";
 import styles from './burger-constructor.module.css';
-import { OrderDetails } from "../order-details/order-details";
+import { OrderDetails } from "./order-details/order-details";
 import { Modal } from "../app-modal/app-modal";
 import { getOrderNum } from "../../services/actions/burger-constructor";
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from "react-dnd";
-import { ConstructorItem } from "../constructor-item/constructor-item";
+import { ConstructorItem } from "./constructor-item/constructor-item";
 
 import { 
   Button, 

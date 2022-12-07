@@ -9,6 +9,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { Switch, Route } from 'react-router-dom';
 import { NotFound404, Registration, SignIn, ForgotPassword, ResetPassword } from '../../pages';
+import { UserProfile } from '../user-profile/user-profile';
+import { ProtectedRoute } from '../protected-route';
 
 function App() {
   const {isLoading, hasError} = useSelector((store: IRootState) => store.ingredients);
@@ -19,7 +21,22 @@ function App() {
       <main className={styles.container}>
         
           <Switch>
-            <Route path="/" exact={true}>
+            <ProtectedRoute onlyUnAuth={true} path="/login" exact={true}>
+              <SignIn/>
+            </ProtectedRoute>
+            <ProtectedRoute onlyUnAuth={true} path="/register" exact={true}>
+              <Registration/>
+            </ProtectedRoute>
+            <ProtectedRoute onlyUnAuth={true} path="/forgot-password" exact={true}>
+              <ForgotPassword/>
+            </ProtectedRoute>
+            <ProtectedRoute onlyUnAuth={true} path="/reset-password" exact={true}>
+              <ResetPassword/>
+            </ProtectedRoute>
+            <ProtectedRoute path="/profile">
+              <UserProfile/>
+            </ProtectedRoute>
+            <Route path="/" >
               {isLoading && (
                 <p className="text text_type_main-medium">Загрузка...</p>
               )}
@@ -34,18 +51,6 @@ function App() {
                   <BurgerConstructor/>
                 </DndProvider>
               )}
-            </Route>
-            <Route path="/login" exact={true}>
-              <SignIn/>
-            </Route>
-            <Route path="/register" exact={true}>
-              <Registration/>
-            </Route>
-            <Route path="/forgot-password" exact={true}>
-              <ForgotPassword/>
-            </Route>
-            <Route path="/reset-password" exact={true}>
-              <ResetPassword/>
             </Route>
             <Route>
               <NotFound404 />

@@ -1,10 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from './pages.module.css';
 import { EmailInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { forgotPasswordRequest } from "../services/actions/forgot-reset-pass";
+import { useHistory } from 'react-router-dom'; 
 
 export const ForgotPassword = () => {
+  const history = useHistory(); 
+  const dispatch = useDispatch();
+
+  const {forgotPasswordSuccess, forgotPasswordError} = useSelector(store => store.forgotResetPass);
+
   const [emailValue, setEmailValue] = React.useState('');
+
+  const submit = e => {
+    e.preventDefault();
+    const userEmail = {
+      email: emailValue
+    }
+    dispatch(forgotPasswordRequest(userEmail));
+    setEmailValue('');
+  };
+
+  useEffect (() => {
+    if (forgotPasswordSuccess) {
+      history.replace({ pathname: '/reset-password' });
+    }
+  }, [forgotPasswordSuccess, history]);
 
   return (
     <div className={styles.container}>
@@ -14,7 +37,7 @@ export const ForgotPassword = () => {
         </p>
       </div>
 
-      <form className={styles.form__container}>
+      <form onSubmit={submit} className={styles.form__container}>
         <EmailInput
           placeholder="Укажите e-mail"
           onChange={e => setEmailValue(e.target.value)}
@@ -29,6 +52,10 @@ export const ForgotPassword = () => {
             Восстановить
           </Button>
         </div>
+
+        {forgotPasswordError && (<p className={`${styles.error__text} text text_type_main-default text_color_inactive mt-6`}>
+          Введите корректный E-mail адрес.
+        </p>)}
       </form>
 
       <div className={`${styles.text__container} mb-4`}>

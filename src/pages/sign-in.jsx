@@ -1,11 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from './pages.module.css';
 import { EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUserRequest } from "../services/actions/register-login-user";
+import { Redirect, useLocation } from 'react-router-dom';
 
 export const SignIn = () => {
+  const dispatch = useDispatch();
+  let location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
+
+  const { loginSuccess, loginError } = useSelector(store => store.registerLoginUser);
+
   const [emailValue, setEmailValue] = React.useState('');
   const [passValue, setPassValue] = React.useState('');
+
+  const submit = e => {
+    e.preventDefault();
+    const userData = {
+      email: emailValue,
+      password: passValue
+    }
+    dispatch(loginUserRequest(userData));
+    setEmailValue('');
+    setPassValue('');
+  };
+
+  if (loginSuccess) {
+    return (
+      <Redirect
+        to = { from }
+      />
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -15,7 +43,7 @@ export const SignIn = () => {
         </p>
       </div>
 
-      <form className={styles.form__container}>
+      <form onSubmit={submit} className={styles.form__container}>
         <EmailInput
           placeholder="Email"
           onChange={e => setEmailValue(e.target.value)}
@@ -37,6 +65,10 @@ export const SignIn = () => {
             Войти
           </Button>
         </div>
+
+        {loginError && (<p className={`${styles.error__text} text text_type_main-default text_color_inactive mt-6`}>
+          Ошибка авторизации. Введите корректные данные.
+        </p>)}
       </form>
 
       <div className={`${styles.text__container} mb-4`}>

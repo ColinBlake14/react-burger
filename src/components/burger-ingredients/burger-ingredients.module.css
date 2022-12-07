@@ -25,39 +25,6 @@
   gap: 24px;
 }
 
-.card {
-  width: auto;
-  max-width: 272px;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  align-items: center;
-  position: relative;
-}
-
-.price {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-}
-
-.description {
-  width: 100%;
-  height: 48px;
-  word-wrap: normal;
-}
-
-.card__img {
-  max-width: 240px;
-  max-height: 120px;
-}
-
-.counter {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
 .ingredients__container {
   overflow: auto;
   overflow-y: auto;

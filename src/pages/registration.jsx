@@ -1,12 +1,31 @@
 import React from "react";
 import styles from './pages.module.css';
-import { EmailInput, PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
+import { EmailInput, PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUserRequest } from '../services/actions/register-login-user';
 
 export const Registration = () => {
+  const dispatch = useDispatch();
+
+  const registrationError = useSelector(store => store.registerLoginUser.registrationError);
+
   const [nameValue, setNameValue] = React.useState('');
   const [emailValue, setEmailValue] = React.useState('');
   const [passValue, setPassValue] = React.useState('');
+
+  const submit = e => {
+    e.preventDefault();
+    const userData = {
+      email: emailValue,
+      password: passValue,
+      name: nameValue
+    }
+    dispatch(registerUserRequest(userData));
+    setNameValue('');
+    setEmailValue('');
+    setPassValue('');
+  };
 
   return (
     <div className={styles.container}>
@@ -16,7 +35,7 @@ export const Registration = () => {
         </p>
       </div>
 
-      <form className={styles.form__container}>
+      <form onSubmit={submit} className={styles.form__container}>
         <Input
           type={'text'}
           placeholder="Имя"
@@ -50,6 +69,10 @@ export const Registration = () => {
             Зарегистрироваться
           </Button>
         </div>
+
+        {registrationError && (<p className={`${styles.error__text} text text_type_main-default text_color_inactive mt-6`}>
+          Ошибка регистрации. Введите корректные данные.
+        </p>)}
       </form>
 
       <div className={`${styles.text__container} mb-4`}>

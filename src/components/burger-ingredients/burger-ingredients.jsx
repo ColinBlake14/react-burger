@@ -1,15 +1,13 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import styles from './burger-ingredients.module.css';
-import PropTypes from 'prop-types';
 import { IngredientDetails } from "../ingredient-details/ingredient-details";
 import { Modal } from "../app-modal/app-modal";
-import { ingredientType } from "../../utils/types";
-import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useInView } from "react-intersection-observer";
 import { useDispatch, useSelector } from 'react-redux';
 import { getItems } from "../../services/actions/burger-ingredients";
-import { useDrag } from "react-dnd";
-import { v4 as uuidv4 } from "uuid";
+import { IngredientCard } from "./ingredient-card/ingredient-card";
+import { Link, useLocation, Switch, Route } from "react-router-dom";
 
 import { 
   SET_MODAL_DATA, 
@@ -18,7 +16,10 @@ import {
 } from "../../services/actions/burger-ingredients";
 
 export const BurgerIngredients = () => {
+  let location = useLocation();
   const dispatch = useDispatch();
+
+  let background = location.state && location.state.background;
 
   const bunSection = useRef(null);
   const sauceSection = useRef(null);
@@ -114,7 +115,19 @@ export const BurgerIngredients = () => {
 
         <div ref={ref1} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
           {ingredientsData.filter(elem => elem.type === "bun").map(item => {
-            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
+            return (
+              <Link 
+                key={item._id}
+                to={{
+                  pathname: `/ingredients/${item._id}`,
+                  // This is the trick! This link sets
+                  // the `background` in location state.
+                  state: { background: location }
+                }}
+              >
+                <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
+              </Link>
+            )
           })}
         </div>
 
@@ -174,45 +187,18 @@ export const BurgerIngredients = () => {
           <IngredientDetails/>
         </Modal>
       )}
+
+      <div>
+        <Switch location={background || location}> 
+          <Route path="/ingredients/:id">
+            <Modal header="Детали ингредиента" onClose={handleCloseModal}>
+              <IngredientDetails/>
+            </Modal>
+          </Route>
+        </Switch>
+
+        {background && <Route path="/ingredients/:id" children={<Modal />} />}
+      </div>
     </section>
   )
-}
-
-const IngredientCard = ({ingredientData, handleOpenModal}) => {
-  const [, dragRef] = useDrag({
-    type: ingredientData.type === "bun" ? "bun" : "ingredient",
-    item: {
-      _id: ingredientData._id,
-      name: ingredientData.name,
-      type: ingredientData.type,
-      price: ingredientData.price,
-      image: ingredientData.image,
-      uuid: uuidv4()
-    }
-  });
-
-  const onCardClick = () => {
-    handleOpenModal(ingredientData);
-  };
-
-  return (
-    <div className={styles.card} onClick={onCardClick} ref={dragRef}>
-      <img className={styles.card__img} src={ingredientData.image_large} alt={ingredientData.name}/>
-      {ingredientData.__v !== 0 && <Counter className={styles.counter} count={ingredientData.__v} size="default"/>}
-      <div className={`${styles.price} pt-1 pb-1`}>
-        <p className="text text_type_digits-default">{ingredientData.price}</p>
-        <CurrencyIcon type="primary" />
-      </div>
-      <div className={styles.description}>
-        <p className="text text_type_main-default">
-          {ingredientData.name}
-        </p>
-      </div>   
-    </div>
-  )
-}
-
-IngredientCard.propTypes = {
-  ingredientData: ingredientType.isRequired,
-  handleOpenModal: PropTypes.func.isRequired
 }

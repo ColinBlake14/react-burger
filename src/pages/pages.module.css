@@ -1,5 +1,6 @@
 :root {
   --color-link: #4c4cff;
+  --color-error: #ff0000;
 }
 
 .container {
@@ -61,4 +62,8 @@
 
 a {
   text-decoration: none;
+}
+
+.error__text {
+  color: var(--color-error);
 }
