@@ -9,9 +9,6 @@ export const GET_ITEMS_REQUEST = 'GET_ITEMS_REQUEST';
 export const GET_ITEMS_SUCCESS = 'GET_ITEMS_SUCCESS';
 export const GET_ITEMS_FAILED = 'GET_ITEMS_FAILED';
 
-export const SET_MODAL_DATA = 'SET_MODAL_DATA';
-export const RESET_MODAL_DATA = 'RESET_MODAL_DATA';
-
 export const SET_CURRENT_TAB = 'SET_CURRENT_TAB';
 
 export function getItems() {

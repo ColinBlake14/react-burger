@@ -4,6 +4,7 @@ import { BurgerIcon, ListIcon, Logo, ProfileIcon } from '@ya.praktikum/react-dev
 import { Link, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { authUserRequest } from '../../services/actions/register-login-user';
+import { getItems } from "../../services/actions/burger-ingredients";
 
 export const AppHeader = () => {
   const dispatch = useDispatch();
@@ -17,10 +18,22 @@ export const AppHeader = () => {
   const mainTextColor = "text text_type_main-default ml-2";
   const inactiveTextColor = "text text_type_main-default text_color_inactive ml-2";
 
+  const ingredientsData = useSelector((store) => store.ingredients.items);
+
+  useEffect(
+    () => {
+      if (!ingredientsData.length) {
+        dispatch(getItems());
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]
+  );
+
   useEffect(() => {
     if (!isUserLoginSuccess) {
       dispatch(authUserRequest());
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

@@ -16,7 +16,8 @@ export const postOrder = async (order) => {
   const options = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json;charset=utf-8'
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: 'Bearer ' + getCookie('accessToken')
     },
     body: JSON.stringify(order)
   }
@@ -116,14 +117,17 @@ export const fetchWithRefresh = async (url, options) => {
 };
 
 export const getUser = async () => {
-  const options = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-      Authorization: 'Bearer ' + getCookie('accessToken')
-    }
-  };
-  return request(BASE_URL + 'auth/user', options);
+  if (getCookie('accessToken')) {
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+        Authorization: 'Bearer ' + getCookie('accessToken')
+      }
+    };
+    return request(BASE_URL + 'auth/user', options);
+  }
+  else return null;
 }
 
 export const patchUser = async (user) => {

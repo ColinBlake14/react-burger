@@ -47,3 +47,9 @@
 .ingredients__container::-webkit-scrollbar-thumb {
   background-color: #8585AD;
 }
+
+.link {
+  flex-grow: 1;
+  max-width: 272px;
+  width: auto;
+}

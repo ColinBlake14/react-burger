@@ -37,6 +37,7 @@ export const UserProfileData = () => {
       setNameValue(userStoreData.name);
       setEmailValue(userStoreData.email);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

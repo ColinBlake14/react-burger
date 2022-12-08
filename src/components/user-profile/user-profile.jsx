@@ -1,7 +1,6 @@
 import React from "react";
 import styles from './user-profile.module.css';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
 import { UserProfileData } from "./user-profile-data/user-profile-data";
 import { UserProfileOrders } from "./user-profile-orders/user-profile-orders";
 import { Switch, Route } from 'react-router-dom';
@@ -9,7 +8,6 @@ import { useDispatch } from 'react-redux';
 import { logoutUserRequest } from "../../services/actions/register-login-user";
 
 export const UserProfile = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
   let { path, url } = useRouteMatch();
 
@@ -21,7 +19,6 @@ export const UserProfile = () => {
   
   const onLogoutClick = () => {
     dispatch(logoutUserRequest());
-    history.replace({ pathname: '/login' });
   }
 
   return (

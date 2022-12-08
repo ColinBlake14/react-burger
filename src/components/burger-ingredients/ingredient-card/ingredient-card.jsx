@@ -1,12 +1,11 @@
 import React from "react";
-import PropTypes from 'prop-types';
 import { ingredientType } from "../../../utils/types";
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrag } from "react-dnd";
 import { v4 as uuidv4 } from "uuid";
 import styles from './ingredient-card.module.css';
 
-export const IngredientCard = ({ingredientData, handleOpenModal}) => {
+export const IngredientCard = ({ ingredientData }) => {
   const [, dragRef] = useDrag({
     type: ingredientData.type === "bun" ? "bun" : "ingredient",
     item: {
@@ -19,12 +18,8 @@ export const IngredientCard = ({ingredientData, handleOpenModal}) => {
     }
   });
 
-  const onCardClick = () => {
-    handleOpenModal(ingredientData);
-  };
-
   return (
-    <div className={styles.card} onClick={onCardClick} ref={dragRef}>
+    <div className={styles.card} ref={dragRef}>
       <img className={styles.card__img} src={ingredientData.image_large} alt={ingredientData.name}/>
       {ingredientData.__v !== 0 && <Counter className={styles.counter} count={ingredientData.__v} size="default"/>}
       <div className={`${styles.price} pt-1 pb-1`}>
@@ -41,6 +36,5 @@ export const IngredientCard = ({ingredientData, handleOpenModal}) => {
 }
 
 IngredientCard.propTypes = {
-  ingredientData: ingredientType.isRequired,
-  handleOpenModal: PropTypes.func.isRequired
+  ingredientData: ingredientType.isRequired
 }
