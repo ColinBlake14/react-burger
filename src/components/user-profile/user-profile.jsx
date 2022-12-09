@@ -9,7 +9,7 @@ import { logoutUserRequest } from "../../services/actions/register-login-user";
 
 export const UserProfile = () => {
   const dispatch = useDispatch();
-  let { path, url } = useRouteMatch();
+  const { path, url } = useRouteMatch();
 
   const isOrders = !!useRouteMatch(`${path}/orders`);
   const isProfile = !isOrders;

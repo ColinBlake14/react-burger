@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
 
 export const IngredientDetails = () => {
-  let { id } = useParams();
+  const { id } = useParams();
   const [ingredientData, setIngredientData] = useState(null);
 
   const ingredientsData = useSelector(store => store.ingredients.items);

@@ -1,20 +1,14 @@
 import React from 'react';
 import { useLocation, Switch, Route } from "react-router-dom";
-import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { ModalIngredient } from '../app-modal/app-modal-ingredient';
-import { BurgerConstructor } from '../burger-constructor/burger-constructor';
-import { BurgerIngredients } from '../burger-ingredients/burger-ingredients';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
 import { NotFound404, Registration, SignIn, ForgotPassword, ResetPassword } from '../../pages';
 import { UserProfile } from '../user-profile/user-profile';
 import { ProtectedRoute } from '../protected-route';
-import { useSelector } from 'react-redux';
+import { AppHomePage } from '../app-home-page/app-home-page';
 
 export function AppSwitchRouter() {
-  const {isLoading, hasError} = useSelector(store => store.ingredients);
-  let location = useLocation();
-  let background = location.state && location.state.background;
+  const location = useLocation();
+  const background = location.state && location.state.background;
 
   return (
     <>
@@ -35,20 +29,7 @@ export function AppSwitchRouter() {
           <UserProfile/>
         </ProtectedRoute>
         <Route path="/" exact={true}>
-          {isLoading && (
-            <p className="text text_type_main-medium">Загрузка...</p>
-          )}
-          {hasError && (
-            <p className="text text_type_main-medium">
-              Не удалось загрузить данные
-            </p>
-          )}
-          {!isLoading && !hasError && (
-            <DndProvider backend={HTML5Backend}>
-              <BurgerIngredients/>
-              <BurgerConstructor/>
-            </DndProvider>
-          )}
+          <AppHomePage/>
         </Route>
         <Route path="/ingredients/:id" exact={true}>
           <ModalIngredient />

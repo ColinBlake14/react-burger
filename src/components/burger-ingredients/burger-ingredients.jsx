@@ -11,7 +11,7 @@ import {
 } from "../../services/actions/burger-ingredients";
 
 export const BurgerIngredients = () => {
-  let location = useLocation();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const bunSection = useRef(null);

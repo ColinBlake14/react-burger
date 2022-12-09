@@ -11,7 +11,7 @@ const modalRoot = document.getElementById("modalRoot");
 
 export const ModalIngredient = () => {
   const header = "Детали ингредиента";
-  let history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     const keydownHandler = ({ key }) => {

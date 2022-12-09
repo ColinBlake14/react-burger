@@ -23,7 +23,8 @@ const initialState = {
   loginError: false,
   logoutRequest: false,
   logoutError: false,
-  authRequest: false
+  authRequest: false,
+  authChecked: false
 }
 
 export const registerLoginUserReducer = (state = initialState, action) => {
@@ -106,6 +107,7 @@ export const registerLoginUserReducer = (state = initialState, action) => {
         user: null,
         loginSuccess: false,
         authRequest: true,
+        authChecked: false
       };
     }
     case AUTH_USER_SUCCESS: {
@@ -113,12 +115,14 @@ export const registerLoginUserReducer = (state = initialState, action) => {
         ...state, 
         authRequest: false,
         loginSuccess: true,
+        authChecked: true,
         user: action.user
       };
     }
     case AUTH_USER_FAILED: {
       return { 
-        ...initialState
+        ...initialState,
+        authChecked: true
       };
     }
     default: {
