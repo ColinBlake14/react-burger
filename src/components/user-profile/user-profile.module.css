@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.tabs__container {
+  width: 320px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 228px;
+}
+
+.tab {
+  height: 64px;
+  width: 320px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.tab__text {
+  height: 48px;
+  width: 320px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: start;
+}
+
+.link {
+  display: flex;
+  text-decoration: none;
+  z-index: 1;
+  cursor: pointer;
+}

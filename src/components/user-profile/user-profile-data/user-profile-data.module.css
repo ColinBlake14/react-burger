@@ -1,0 +1,21 @@
+.data__fields__container {
+  width: 480px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 228px;
+}
+
+.buttons__container {
+  width: auto;
+  height: 56px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.button__container {
+  width: 167px;
+  height: 56px;
+}
+

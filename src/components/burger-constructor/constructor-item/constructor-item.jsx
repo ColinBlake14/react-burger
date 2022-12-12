@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import styles from './constructor-item.module.css';
 import PropTypes from 'prop-types';
-import { constructorIngredientType } from "../../utils/types";
+import { constructorIngredientType } from "../../../utils/types";
 import { useDispatch } from 'react-redux';
 import { useDrop, useDrag } from "react-dnd";
 
@@ -14,12 +14,12 @@ import {
   DELETE_BUN, 
   DELETE_INGREDIENT,
   MOVE_INGREDIENT
-} from "../../services/actions/burger-constructor";
+} from "../../../services/actions/burger-constructor";
 
 import { 
   DECREASE_ITEM, 
   RESET_BUNS_COUNT
-} from "../../services/actions/burger-ingredients";
+} from "../../../services/actions/burger-ingredients";
 
 export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, id}) => {
   const dispatch = useDispatch();

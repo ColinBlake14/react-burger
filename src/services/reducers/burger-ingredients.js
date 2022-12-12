@@ -6,8 +6,6 @@ import {
   GET_ITEMS_FAILED,
   RESET_BUNS_COUNT,
   RESET_INGREDIENTS_COUNT,
-  SET_MODAL_DATA,
-  RESET_MODAL_DATA,
   SET_CURRENT_TAB
  } from "../actions/burger-ingredients";
 
@@ -16,8 +14,6 @@ import {
   hasError: false,
   isLoading: false,
   hasData: false,
-  isModalVisible: false,
-  modalData: null,
   currentTab: 'one'
  }
 
@@ -78,20 +74,6 @@ import {
         items: [...state.items].map(item => {
           return { ...item, __v: 0 };
         })
-      };
-    }
-    case SET_MODAL_DATA: {
-      return {
-        ...state,
-        isModalVisible: true,
-        modalData: action.modalItem
-      };
-    }
-    case RESET_MODAL_DATA: {
-      return {
-        ...state,
-        isModalVisible: false,
-        modalData: null
       };
     }
     case SET_CURRENT_TAB: {

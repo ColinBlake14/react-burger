@@ -29,3 +29,17 @@
   left: 0%;
   right: 0%;
 }
+
+.link {
+  display: flex;
+  text-decoration: none;
+  z-index: 1;
+}
+
+a:active,
+a:visited,
+a:hover,
+a {
+  text-decoration: none;
+  color: white;
+}

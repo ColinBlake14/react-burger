@@ -1,23 +1,17 @@
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useMemo } from "react";
 import styles from './burger-ingredients.module.css';
-import PropTypes from 'prop-types';
-import { IngredientDetails } from "../ingredient-details/ingredient-details";
-import { Modal } from "../app-modal/app-modal";
-import { ingredientType } from "../../utils/types";
-import { Tab, CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components'
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useInView } from "react-intersection-observer";
 import { useDispatch, useSelector } from 'react-redux';
-import { getItems } from "../../services/actions/burger-ingredients";
-import { useDrag } from "react-dnd";
-import { v4 as uuidv4 } from "uuid";
+import { IngredientCard } from "./ingredient-card/ingredient-card";
+import { Link, useLocation } from "react-router-dom";
 
 import { 
-  SET_MODAL_DATA, 
-  RESET_MODAL_DATA,
   SET_CURRENT_TAB
 } from "../../services/actions/burger-ingredients";
 
 export const BurgerIngredients = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const bunSection = useRef(null);
@@ -25,15 +19,7 @@ export const BurgerIngredients = () => {
   const mainSection = useRef(null);
   
   const ingredientsData = useSelector(store => store.ingredients.items);
-  const { hasData, isModalVisible, currentTab } = useSelector(store => store.ingredients);
-
-  useEffect(
-    () => {
-      if (!ingredientsData.length) {
-        dispatch(getItems());
-      }
-    },[]
-  );
+  const { hasData, currentTab } = useSelector(store => store.ingredients);
 
   function scrollToSection(num) {
     switch (num) {
@@ -79,14 +65,6 @@ export const BurgerIngredients = () => {
     threshold: 0,
   });
 
-  function handleOpenModal(item) {
-    dispatch({ type: SET_MODAL_DATA, modalItem: item });
-  };
-
-  function handleCloseModal () {
-    dispatch({ type: RESET_MODAL_DATA});
-  };
-
   const tabContent = useMemo(() => {
     return (
       <div className={styles.tab__container}>
@@ -101,6 +79,7 @@ export const BurgerIngredients = () => {
         </Tab>
       </div>
     )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTab]);
 
   const ingredientsContent = useMemo(() => {
@@ -114,7 +93,18 @@ export const BurgerIngredients = () => {
 
         <div ref={ref1} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
           {ingredientsData.filter(elem => elem.type === "bun").map(item => {
-            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
+            return (
+              <Link
+                className={styles.link}
+                key={item._id}
+                to={{
+                  pathname: `/ingredients/${item._id}`,
+                  state: { background: location }
+                }}
+              >
+                <IngredientCard ingredientData={item} key={item._id} />
+              </Link>
+            )
           })}
         </div>
 
@@ -126,7 +116,18 @@ export const BurgerIngredients = () => {
 
         <div ref={ref2} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
           {ingredientsData.filter(elem => elem.type === "sauce").map(item => {
-            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
+            return (
+              <Link
+                className={styles.link}
+                key={item._id}
+                to={{
+                  pathname: `/ingredients/${item._id}`,
+                  state: { background: location }
+                }}
+              >
+                <IngredientCard ingredientData={item} key={item._id} />
+              </Link>
+            )
           })
           }
         </div>
@@ -139,11 +140,23 @@ export const BurgerIngredients = () => {
 
         <div ref={ref3} className={`${styles.card__container} pt-6 pl-4 pr-2 pb-10`}>
           {ingredientsData.filter(elem => elem.type === "main").map(item => {
-            return <IngredientCard ingredientData={item} key={item._id} handleOpenModal={handleOpenModal} />
+            return (
+              <Link
+                className={styles.link}
+                key={item._id}
+                to={{
+                  pathname: `/ingredients/${item._id}`,
+                  state: { background: location }
+                }}
+              >
+                <IngredientCard ingredientData={item} key={item._id} />
+              </Link>
+            )
           })}
         </div>
       </div>
     )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredientsData, ref1, ref2, ref3]);
 
   const content = useMemo(() => {
@@ -168,51 +181,6 @@ export const BurgerIngredients = () => {
   return (
     <section className={styles.container}>
       {content}
-    
-      {isModalVisible && (
-        <Modal header="Детали ингредиента" onClose={handleCloseModal}>
-          <IngredientDetails/>
-        </Modal>
-      )}
     </section>
   )
-}
-
-const IngredientCard = ({ingredientData, handleOpenModal}) => {
-  const [, dragRef] = useDrag({
-    type: ingredientData.type === "bun" ? "bun" : "ingredient",
-    item: {
-      _id: ingredientData._id,
-      name: ingredientData.name,
-      type: ingredientData.type,
-      price: ingredientData.price,
-      image: ingredientData.image,
-      uuid: uuidv4()
-    }
-  });
-
-  const onCardClick = () => {
-    handleOpenModal(ingredientData);
-  };
-
-  return (
-    <div className={styles.card} onClick={onCardClick} ref={dragRef}>
-      <img className={styles.card__img} src={ingredientData.image_large} alt={ingredientData.name}/>
-      {ingredientData.__v !== 0 && <Counter className={styles.counter} count={ingredientData.__v} size="default"/>}
-      <div className={`${styles.price} pt-1 pb-1`}>
-        <p className="text text_type_digits-default">{ingredientData.price}</p>
-        <CurrencyIcon type="primary" />
-      </div>
-      <div className={styles.description}>
-        <p className="text text_type_main-default">
-          {ingredientData.name}
-        </p>
-      </div>   
-    </div>
-  )
-}
-
-IngredientCard.propTypes = {
-  ingredientData: ingredientType.isRequired,
-  handleOpenModal: PropTypes.func.isRequired
 }

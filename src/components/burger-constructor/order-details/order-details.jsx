@@ -1,6 +1,6 @@
 import React from "react";
 import styles from './order-details.module.css';
-import orderAcceptedImg from "../../images/orderAccepted.png";
+import orderAcceptedImg from "../../../images/orderAccepted.png";
 import { useSelector } from 'react-redux';
 
 export const OrderDetails = () => {

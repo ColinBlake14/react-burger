@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from "react";
 import styles from './burger-constructor.module.css';
-import { OrderDetails } from "../order-details/order-details";
+import { OrderDetails } from "./order-details/order-details";
 import { Modal } from "../app-modal/app-modal";
 import { getOrderNum } from "../../services/actions/burger-constructor";
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from "react-dnd";
-import { ConstructorItem } from "../constructor-item/constructor-item";
+import { ConstructorItem } from "./constructor-item/constructor-item";
+import { useHistory } from "react-router-dom";
 
 import { 
   Button, 
@@ -27,10 +28,12 @@ import {
 
 export const BurgerConstructor = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [totalPrice, setTotalPrice] = useState(0);
 
   const { bun , ingredients, isModalVisible } = useSelector(store => store.bconstructor);
+  const isUserLoginSuccess = useSelector(store => store.registerLoginUser.loginSuccess);
 
   const [{isHoverIngredient}, dropIngredient] = useDrop({
     accept: "ingredient",
@@ -56,16 +59,20 @@ export const BurgerConstructor = () => {
   });
 
   function handleOpenModal() {
-    if (bun && ingredients.length) {
-      let orderIds = ingredients.map(item => item._id);
-      orderIds.push(bun._id);
-      orderIds = { 
-        ingredients: [...orderIds]
-      };
-      
-      dispatch({ type: RESET_INGREDIENTS });
-      dispatch({ type: RESET_INGREDIENTS_COUNT });
-      dispatch(getOrderNum(orderIds));
+    if (!isUserLoginSuccess) {
+      history.push("/login", { from: "/" });
+    } else {
+      if (bun && ingredients.length) {
+        let orderIds = ingredients.map(item => item._id);
+        orderIds.push(bun._id);
+        orderIds = { 
+          ingredients: [...orderIds]
+        };
+        
+        dispatch({ type: RESET_INGREDIENTS });
+        dispatch({ type: RESET_INGREDIENTS_COUNT });
+        dispatch(getOrderNum(orderIds));
+      }
     }
   };
 
