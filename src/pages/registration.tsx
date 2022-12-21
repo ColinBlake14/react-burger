@@ -4,24 +4,26 @@ import { EmailInput, PasswordInput, Button, Input } from '@ya.praktikum/react-de
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUserRequest } from '../services/actions/register-login-user';
+import { TRootState } from "../services/reducers";
+import { AnyAction } from "@reduxjs/toolkit";
 
 export const Registration = () => {
   const dispatch = useDispatch();
 
-  const registrationError = useSelector(store => store.registerLoginUser.registrationError);
+  const registrationError = useSelector((store: TRootState) => store.registerLoginUser.registrationError);
 
-  const [nameValue, setNameValue] = React.useState('');
-  const [emailValue, setEmailValue] = React.useState('');
-  const [passValue, setPassValue] = React.useState('');
+  const [nameValue, setNameValue] = React.useState<string>('');
+  const [emailValue, setEmailValue] = React.useState<string>('');
+  const [passValue, setPassValue] = React.useState<string>('');
 
-  const submit = e => {
+  const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const userData = {
       email: emailValue,
       password: passValue,
       name: nameValue
     }
-    dispatch(registerUserRequest(userData));
+    dispatch(registerUserRequest(userData) as unknown as AnyAction);
     setNameValue('');
     setEmailValue('');
     setPassValue('');

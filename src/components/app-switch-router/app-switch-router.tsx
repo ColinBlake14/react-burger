@@ -5,9 +5,10 @@ import { NotFound404, Registration, SignIn, ForgotPassword, ResetPassword } from
 import { UserProfile } from '../user-profile/user-profile';
 import { ProtectedRoute } from '../protected-route';
 import { AppHomePage } from '../app-home-page/app-home-page';
+import * as H from 'history';
 
 export function AppSwitchRouter() {
-  const location = useLocation();
+  const location = useLocation<{ background: H.Location }>();
   const background = location.state && location.state.background;
 
   return (

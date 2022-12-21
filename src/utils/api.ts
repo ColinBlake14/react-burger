@@ -1,18 +1,49 @@
 import { checkResponse } from "./check-response";
 import { setCookie, getCookie } from "./cookies";
+import { TIngredient, TOrderIds, TOrderResponse, TUserData, TUserLogin, TUserReset } from "./types";
 
 const BASE_URL = 'https://norma.nomoreparties.space/api/';
 
-function request(url, options) {
-  return fetch(url, options).then(checkResponse);
+type TResponseData<T> = {
+  success: boolean,
+  data: T
+};
+
+type TResponseWithMessage = {
+  success: boolean,
+  message: string
+};
+
+type TResponseAuth = {
+  success: boolean,
+  accessToken: string,
+  refreshToken: string,
+  user: {
+    email: string,
+    name: string
+  }
+};
+
+interface Request {
+  headers: {
+    Authorization: string;
+  }
+}
+
+type TResponseRefresh = Omit<TResponseAuth, 'user'>;
+
+type TResponseUser = Omit<TResponseAuth, 'accessToken' | 'refreshToken'>;
+
+function request<T>(url: string, options: RequestInit | undefined): Promise<T> {
+  return fetch(url, options).then(res => checkResponse<T>(res));
 };
 
 export const getIngredients = async () => {
-  return request(BASE_URL + 'ingredients', undefined)
+  return request<TResponseData<Array<TIngredient>>>(BASE_URL + 'ingredients', undefined)
     .then(res => res.data);
 };
 
-export const postOrder = async (order) => {
+export const postOrder = async (order: TOrderIds) => {
   const options = {
     method: 'POST',
     headers: {
@@ -22,10 +53,10 @@ export const postOrder = async (order) => {
     body: JSON.stringify(order)
   }
 
-  return request(BASE_URL + 'orders', options);
+  return request<TOrderResponse>(BASE_URL + 'orders', options);
 };
 
-export const registerUser = async (user) => {
+export const registerUser = async (user: TUserData) => {
   const options = {
     method: 'POST',
     headers: {
@@ -33,10 +64,10 @@ export const registerUser = async (user) => {
     },
     body: JSON.stringify(user)
   }
-  return request(BASE_URL + 'auth/register', options);
+  return request<TResponseAuth>(BASE_URL + 'auth/register', options);
 };
 
-export const loginUser = async (user) => {
+export const loginUser = async (user: TUserLogin) => {
   const options = {
     method: 'POST',
     headers: {
@@ -44,10 +75,10 @@ export const loginUser = async (user) => {
     },
     body: JSON.stringify(user)
   }
-  return request(BASE_URL + 'auth/login', options);
+  return request<TResponseAuth>(BASE_URL + 'auth/login', options);
 };
 
-export const forgotPasswordUser = async (email) => {
+export const forgotPasswordUser = async (email: {email: string}) => {
   const options = {
     method: 'POST',
     headers: {
@@ -55,10 +86,10 @@ export const forgotPasswordUser = async (email) => {
     },
     body: JSON.stringify(email)
   }
-  return request(BASE_URL + 'password-reset', options);
+  return request<TResponseWithMessage>(BASE_URL + 'password-reset', options);
 };
 
-export const resetPasswordUser = async (data) => {
+export const resetPasswordUser = async (data: TUserReset) => {
   const options = {
     method: 'POST',
     headers: {
@@ -66,7 +97,7 @@ export const resetPasswordUser = async (data) => {
     },
     body: JSON.stringify(data)
   };
-  return request(BASE_URL + 'password-reset/reset', options);
+  return request<TResponseWithMessage>(BASE_URL + 'password-reset/reset', options);
 };
 
 export const deleteToken = () => {
@@ -79,7 +110,7 @@ export const deleteToken = () => {
       token: localStorage.getItem("refreshToken"),
     }),
   };
-  return request(BASE_URL + 'auth/logout', options);
+  return request<TResponseWithMessage>(BASE_URL + 'auth/logout', options);
 };
 
 export const refreshToken = () => {
@@ -92,14 +123,14 @@ export const refreshToken = () => {
       token: localStorage.getItem("refreshToken"),
     }),
   };
-  return request(BASE_URL + 'auth/token', options);
+  return request<TResponseRefresh>(BASE_URL + 'auth/token', options);
 };
 
-export const fetchWithRefresh = async (url, options) => {
+export const fetchWithRefresh = async (url: string, options: Request) => {
   try {
     const res = await fetch(url, options);
-    return await checkResponse(res);
-  } catch (err) {
+    return await checkResponse<TResponseUser>(res);
+  } catch (err: any) {
     if (err.message === "jwt expired") {
       const refreshData = await refreshToken();
       if (!refreshData.success) {
@@ -107,9 +138,9 @@ export const fetchWithRefresh = async (url, options) => {
       }
       localStorage.setItem("refreshToken", refreshData.refreshToken);
       setCookie("accessToken", refreshData.accessToken);
-      options.headers.authorization = refreshData.accessToken;
+      options.headers.Authorization = refreshData.accessToken;
       const res = await fetch(url, options);
-      return await checkResponse(res);
+      return await checkResponse<TResponseUser>(res);
     } else {
       return Promise.reject(err);
     }
@@ -125,12 +156,12 @@ export const getUser = async () => {
         Authorization: 'Bearer ' + getCookie('accessToken')
       }
     };
-    return request(BASE_URL + 'auth/user', options);
+    return fetchWithRefresh(BASE_URL + 'auth/user', options);
   }
   else return null;
 }
 
-export const patchUser = async (user) => {
+export const patchUser = async (user: TUserData) => {
   const options = {
     method: "PATCH",
     headers: {
@@ -139,5 +170,5 @@ export const patchUser = async (user) => {
     },
     body: JSON.stringify(user)
   };
-  return request(BASE_URL + 'auth/user', options);
+  return request<TResponseUser>(BASE_URL + 'auth/user', options);
 }

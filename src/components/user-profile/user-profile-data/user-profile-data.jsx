@@ -32,7 +32,7 @@ export const UserProfileData = () => {
       setUserDefaultData({
         name: userStoreData.name,
         email: userStoreData.email,
-        pass: ''
+        password: ''
       });
       setNameValue(userStoreData.name);
       setEmailValue(userStoreData.email);
@@ -42,7 +42,7 @@ export const UserProfileData = () => {
 
   useEffect(() => {
     if (userDefaultData) {
-      if (nameValue !== userDefaultData.name || emailValue !== userDefaultData.email || passValue !== userDefaultData.pass) {
+      if (nameValue !== userDefaultData.name || emailValue !== userDefaultData.email || passValue !== userDefaultData.password) {
         setButtonsVisible(true);
       } else {
         setButtonsVisible(false);
@@ -70,7 +70,7 @@ export const UserProfileData = () => {
           setUserDefaultData({
             name: user.name,
             email: user.email,
-            pass: ''
+            password: ''
           });
           setNameValue(user.name);
           setEmailValue(user.email);
@@ -86,7 +86,7 @@ export const UserProfileData = () => {
     e.preventDefault();
     setNameValue(userDefaultData.name);
     setEmailValue(userDefaultData.email);
-    setPassValue(userDefaultData.pass);
+    setPassValue(userDefaultData.password);
   };
 
   return (

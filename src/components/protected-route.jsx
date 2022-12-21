@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 
 export function ProtectedRoute({ children, onlyUnAuth = false, ...rest }) {
   const location = useLocation();
+  let { from } = location.state || { from: { pathname: "/" } };
 
   const isAuthChecked = useSelector(store => store.registerLoginUser.authChecked);
   const isUserLoaded = useSelector(store => store.registerLoginUser.loginSuccess);
@@ -15,7 +16,7 @@ export function ProtectedRoute({ children, onlyUnAuth = false, ...rest }) {
     return (
       <Redirect
         to={{
-          pathname: '/',
+          pathname: from.pathname,
           state: { from: location }
         }}
       />
