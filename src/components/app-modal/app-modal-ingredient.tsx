@@ -1,21 +1,20 @@
 import React from 'react';
 import styles from './app-modal.module.css';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 
-const modalRoot = document.getElementById("modalRoot");
+const modalRoot: HTMLElement = document.getElementById("modalRoot")!;
 
 export const ModalIngredient = () => {
-  const header = "Детали ингредиента";
+  const header: string = "Детали ингредиента";
   const history = useHistory();
 
   useEffect(() => {
-    const keydownHandler = ({ key }) => {
-      switch (key) {
+    const keydownHandler = (e : KeyboardEvent) => {
+      switch (e.key) {
         case 'Escape':
           history.goBack();
           break;
@@ -28,7 +27,7 @@ export const ModalIngredient = () => {
     return () => document.removeEventListener('keydown', keydownHandler);
   })
 
-  const onClose = e => {
+  const onClose = () => {
     history.goBack();
   }
 
@@ -58,8 +57,13 @@ export const ModalIngredient = () => {
   );
 }
 
-const ModalOverlay = ({ onClose, children }) => {
-  const handleOverlay = (e) => {
+export type TModalOverlay = {
+  onClose: () => void,
+  children: React.ReactNode
+}
+
+const ModalOverlay = ({ onClose, children } : TModalOverlay) => {
+  const handleOverlay = (e: React.SyntheticEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -70,9 +74,4 @@ const ModalOverlay = ({ onClose, children }) => {
       {children}
     </div>
   );
-}
-
-ModalOverlay.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  children: PropTypes.node.isRequired
 }

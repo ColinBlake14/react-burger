@@ -2,15 +2,19 @@ import React, {useEffect, useState} from "react"
 import styles from './ingredient-details.module.css';
 import { useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
+import { TRootState } from "../../services/reducers";
+import { TIngredient } from "../../utils/types";
 
 export const IngredientDetails = () => {
-  const { id } = useParams();
-  const [ingredientData, setIngredientData] = useState(null);
+  const { id } = useParams<{id: string}>();
+  const [ingredientData, setIngredientData] = useState<TIngredient>();
 
-  const ingredientsData = useSelector(store => store.ingredients.items);
+  const ingredientsData: Array<TIngredient> | null = useSelector((store: TRootState) => store.ingredients.items);
 
   useEffect(() => {
-    setIngredientData(ingredientsData.filter((item) => item._id === id)[0]);
+    if (ingredientsData) {
+      setIngredientData(ingredientsData.filter((item) => item._id === id)[0]);
+    }
   }, [ingredientsData, id]);
 
   return (
@@ -63,6 +67,5 @@ export const IngredientDetails = () => {
         null
       }
     </>
-    
   )
 }

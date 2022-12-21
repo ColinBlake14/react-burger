@@ -25,19 +25,23 @@ import {
   RESET_BUNS_COUNT,
   INCREASE_ITEM
 } from "../../services/actions/burger-ingredients";
+import { TRootState } from "../../services/reducers";
+import { TIngredientConstructor } from "../../utils/types";
+import { AnyAction } from "redux";
 
 export const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
-  const { bun , ingredients, isModalVisible } = useSelector(store => store.bconstructor);
-  const isUserLoginSuccess = useSelector(store => store.registerLoginUser.loginSuccess);
+  const { bun , ingredients, isModalVisible } = useSelector((store: TRootState) => store.bconstructor);
+  
+  const isUserLoginSuccess = useSelector((store: TRootState) => store.registerLoginUser.loginSuccess);
 
   const [{isHoverIngredient}, dropIngredient] = useDrop({
     accept: "ingredient",
-    drop(item) {
+    drop(item: TIngredientConstructor) {
       dispatch({ type: INCREASE_ITEM, _id: item._id });
       dispatch({ type: SET_INGREDIENT, ingredient: item });
     },
@@ -48,7 +52,7 @@ export const BurgerConstructor = () => {
 
   const [{isHoverBun}, dropBun] = useDrop({
     accept: "bun",
-    drop(item) {
+    drop(item: TIngredientConstructor) {
       dispatch({ type: RESET_BUNS_COUNT });
       dispatch({ type: INCREASE_ITEM, _id: item._id });
       dispatch({ type: SET_BUN, bun: item });
@@ -65,13 +69,13 @@ export const BurgerConstructor = () => {
       if (bun && ingredients.length) {
         let orderIds = ingredients.map(item => item._id);
         orderIds.push(bun._id);
-        orderIds = { 
+        let orderIdsToSend = { 
           ingredients: [...orderIds]
         };
         
         dispatch({ type: RESET_INGREDIENTS });
         dispatch({ type: RESET_INGREDIENTS_COUNT });
-        dispatch(getOrderNum(orderIds));
+        dispatch(getOrderNum(orderIdsToSend) as unknown as AnyAction);
       }
     }
   };
@@ -83,6 +87,7 @@ export const BurgerConstructor = () => {
   useMemo(() => {
     let sum = 0;
       if (ingredients.length) {
+        // @ts-ignore:next-line
         sum += ingredients.reduce((acc, curVal) => acc + curVal.price, 0);
       }
       if (bun) {

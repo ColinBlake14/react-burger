@@ -5,6 +5,8 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { authUserRequest } from '../../services/actions/register-login-user';
 import { getItems } from "../../services/actions/burger-ingredients";
+import { TRootState } from "../../services/reducers";
+import { AnyAction } from "redux";
 
 export const AppHeader = () => {
   const dispatch = useDispatch();
@@ -12,18 +14,18 @@ export const AppHeader = () => {
   const isConstructor = !!useRouteMatch({ path: '/', exact: true});
   const isFeed = !!useRouteMatch('/feed');
   const isProfile = !!useRouteMatch('/profile');
-  const isUserLoginSuccess = useSelector(store => store.registerLoginUser.loginSuccess);
-  const userData = useSelector(store => store.registerLoginUser.user);
+  const isUserLoginSuccess = useSelector((store: TRootState) => store.registerLoginUser.loginSuccess);
+  const userData = useSelector((store: TRootState) => store.registerLoginUser.user);
 
   const mainTextColor = "text text_type_main-default ml-2";
   const inactiveTextColor = "text text_type_main-default text_color_inactive ml-2";
 
-  const ingredientsData = useSelector((store) => store.ingredients.items);
+  const ingredientsData = useSelector((store: TRootState) => store.ingredients.items);
 
   useEffect(
     () => {
       if (!ingredientsData.length) {
-        dispatch(getItems());
+        dispatch(getItems() as unknown as AnyAction);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]
@@ -31,7 +33,7 @@ export const AppHeader = () => {
 
   useEffect(() => {
     if (!isUserLoginSuccess) {
-      dispatch(authUserRequest());
+      dispatch(authUserRequest() as unknown as AnyAction);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

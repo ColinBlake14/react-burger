@@ -13,6 +13,15 @@ export type TIngredient = {
   __v: number
 };
 
+export type TIngredientConstructor = {
+  _id: string,
+  name: string,
+  type: string,
+  price: number,
+  image: string,
+  uuid: string
+}
+
 export type TOrderIds = {
   ingredients: Array<string>
 };

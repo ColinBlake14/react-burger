@@ -136,10 +136,17 @@ export const fetchWithRefresh = async (url: string, options: Request) => {
       if (!refreshData.success) {
         Promise.reject(refreshData);
       }
+
       localStorage.setItem("refreshToken", refreshData.refreshToken);
-      setCookie("accessToken", refreshData.accessToken);
+
+      let accessToken = refreshData.accessToken.split('Bearer ')[1];
+      if (accessToken) {
+        setCookie("accessToken", accessToken);
+      }
+      
       options.headers.Authorization = refreshData.accessToken;
       const res = await fetch(url, options);
+      
       return await checkResponse<TResponseUser>(res);
     } else {
       return Promise.reject(err);
@@ -161,7 +168,7 @@ export const getUser = async () => {
   else return null;
 }
 
-export const patchUser = async (user: TUserData) => {
+export const patchUser = async (user: Partial<TUserData>) => {
   const options = {
     method: "PATCH",
     headers: {

@@ -4,9 +4,10 @@ import { BurgerIngredients } from '../burger-ingredients/burger-ingredients';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { useSelector } from 'react-redux';
+import { TRootState } from '../../services/reducers';
 
 export function AppHomePage() {
-  const {isLoading, hasError} = useSelector(store => store.ingredients);
+  const {isLoading, hasError} = useSelector((store: TRootState) => store.ingredients);
 
   return (
     <>

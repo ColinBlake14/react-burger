@@ -9,31 +9,33 @@ import { Link, useLocation } from "react-router-dom";
 import { 
   SET_CURRENT_TAB
 } from "../../services/actions/burger-ingredients";
+import { TRootState } from "../../services/reducers";
+import { TIngredient } from "../../utils/types";
 
 export const BurgerIngredients = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const bunSection = useRef(null);
-  const sauceSection = useRef(null);
-  const mainSection = useRef(null);
+  const bunSection = useRef<HTMLDivElement>(null);
+  const sauceSection = useRef<HTMLDivElement>(null);
+  const mainSection = useRef<HTMLDivElement>(null);
   
-  const ingredientsData = useSelector(store => store.ingredients.items);
-  const { hasData, currentTab } = useSelector(store => store.ingredients);
+  const ingredientsData: Array<TIngredient> = useSelector((store: TRootState) => store.ingredients.items);
+  const { hasData, currentTab } = useSelector((store: TRootState) => store.ingredients);
 
-  function scrollToSection(num) {
+  function scrollToSection(num: number) {
     switch (num) {
       case 1:
         dispatch({ type: SET_CURRENT_TAB, tab: 'one' });
-        bunSection.current.scrollIntoView({ behavior: "smooth" });
+        bunSection.current!.scrollIntoView({ behavior: "smooth" });
         break;
       case 2:
         dispatch({ type: SET_CURRENT_TAB, tab: 'two' });
-        sauceSection.current.scrollIntoView({ behavior: "smooth" });
+        sauceSection.current!.scrollIntoView({ behavior: "smooth" });
         break;
       case 3:
         dispatch({ type: SET_CURRENT_TAB, tab: 'three' });
-        mainSection.current.scrollIntoView({ behavior: "smooth" });
+        mainSection.current!.scrollIntoView({ behavior: "smooth" });
         break;
       default: break;
     }
