@@ -5,21 +5,23 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { forgotPasswordRequest } from "../services/actions/forgot-reset-pass";
 import { useHistory } from 'react-router-dom'; 
+import { TRootState } from "../services/reducers";
+import { AnyAction } from "redux";
 
 export const ForgotPassword = () => {
   const history = useHistory(); 
   const dispatch = useDispatch();
 
-  const {forgotPasswordSuccess, forgotPasswordError} = useSelector(store => store.forgotResetPass);
+  const {forgotPasswordSuccess, forgotPasswordError} = useSelector((store: TRootState) => store.forgotResetPass);
 
-  const [emailValue, setEmailValue] = React.useState('');
+  const [emailValue, setEmailValue] = React.useState<string>('');
 
-  const submit = e => {
+  const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const userEmail = {
       email: emailValue
     }
-    dispatch(forgotPasswordRequest(userEmail));
+    dispatch(forgotPasswordRequest(userEmail) as unknown as AnyAction);
     setEmailValue('');
   };
 

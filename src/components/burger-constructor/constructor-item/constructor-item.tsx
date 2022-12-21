@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
 import styles from './constructor-item.module.css';
-import PropTypes from 'prop-types';
-import { constructorIngredientType } from "../../../utils/types";
 import { useDispatch } from 'react-redux';
 import { useDrop, useDrag } from "react-dnd";
 
@@ -20,10 +18,20 @@ import {
   DECREASE_ITEM, 
   RESET_BUNS_COUNT
 } from "../../../services/actions/burger-ingredients";
+import { TIngredientConstructor } from "../../../utils/types";
 
-export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, id}) => {
+type TConstructorItem = {
+  itemData: TIngredientConstructor,
+  pos?: "top" | "bottom" | undefined,
+  isLocked?: boolean,
+  classNameAdd?: string,
+  index?: number,
+  id?: string
+}
+
+export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, id}: TConstructorItem) => {
   const dispatch = useDispatch();
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const [{ handlerId }, drop] = useDrop({
     accept: 'item',
@@ -32,7 +40,7 @@ export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, i
         handlerId: monitor.getHandlerId(),
       }
     },
-    hover(item, monitor) {
+    hover(item: any, monitor) {
       if (!ref.current) {
         return;
       }
@@ -48,13 +56,13 @@ export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, i
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
 
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      if (dragIndex < hoverIndex! && hoverClientY < hoverMiddleY) {
         return;
       };
 
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+      if (dragIndex > hoverIndex! && hoverClientY > hoverMiddleY) {
         return;
       };
       
@@ -111,13 +119,4 @@ export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, i
       />
     </div>
   )
-}
-
-ConstructorItem.propTypes = {
-  itemData: constructorIngredientType.isRequired,
-  pos: PropTypes.string,
-  isLocked: PropTypes.bool,
-  classNameAdd: PropTypes.string,
-  index: PropTypes.number,
-  id: PropTypes.string
 }

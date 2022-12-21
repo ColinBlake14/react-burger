@@ -4,35 +4,38 @@ import { EmailInput, PasswordInput, Input, Button } from '@ya.praktikum/react-de
 import { patchUser } from "../../../utils/api";
 import { useDispatch, useSelector } from 'react-redux';
 import { SET_USER_DATA, authUserRequest } from "../../../services/actions/register-login-user";
+import { TRootState } from "../../../services/reducers";
+import { TUserData } from "../../../utils/types";
+import { AnyAction } from "redux";
 
 export const UserProfileData = () => {
   const dispatch = useDispatch();
 
-  const isUserLoginSuccess = useSelector(store => store.registerLoginUser.loginSuccess);
-  const userStoreData = useSelector(store => store.registerLoginUser.user);
+  const isUserLoginSuccess = useSelector((store: TRootState) => store.registerLoginUser.loginSuccess);
+  const userStoreData = useSelector((store: TRootState) => store.registerLoginUser.user);
 
-  const [nameValue, setNameValue] = React.useState('');
-  const [emailValue, setEmailValue] = React.useState('');
-  const [passValue, setPassValue] = React.useState('');
-  const [disabled, setDisabled] = React.useState(true);
-  const [userDefaultData, setUserDefaultData] = React.useState(null);
-  const [buttonsVisible, setButtonsVisible] = React.useState(false);
+  const [nameValue, setNameValue] = React.useState<string>('');
+  const [emailValue, setEmailValue] = React.useState<string>('');
+  const [passValue, setPassValue] = React.useState<string>('');
+  const [disabled, setDisabled] = React.useState<boolean>(true);
+  const [userDefaultData, setUserDefaultData] = React.useState<Partial<TUserData>>({});
+  const [buttonsVisible, setButtonsVisible] = React.useState<boolean>(false);
 
-  const inputRef = React.useRef(null)
+  const inputRef = React.useRef<HTMLInputElement>(null)
 
   const onIconClick = () => {
     setDisabled(false);
-    setTimeout(() => inputRef.current.focus(), 0);
+    setTimeout(() => inputRef.current!.focus(), 0);
   }
 
   useEffect(() => {
     if (!isUserLoginSuccess) {
-      dispatch(authUserRequest());
+      dispatch(authUserRequest() as unknown as AnyAction);
     } else {
       setUserDefaultData({
         name: userStoreData.name,
         email: userStoreData.email,
-        pass: ''
+        password: ''
       });
       setNameValue(userStoreData.name);
       setEmailValue(userStoreData.email);
@@ -42,7 +45,7 @@ export const UserProfileData = () => {
 
   useEffect(() => {
     if (userDefaultData) {
-      if (nameValue !== userDefaultData.name || emailValue !== userDefaultData.email || passValue !== userDefaultData.pass) {
+      if (nameValue !== userDefaultData.name || emailValue !== userDefaultData.email || passValue !== userDefaultData.password) {
         setButtonsVisible(true);
       } else {
         setButtonsVisible(false);
@@ -50,9 +53,9 @@ export const UserProfileData = () => {
     }
   }, [nameValue, emailValue, passValue, userDefaultData]);
   
-  const submit = e => {
+  const submit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    let newUserData = {};
+    let newUserData: Partial<TUserData> = {};
     if (emailValue !== userDefaultData.email) {
       newUserData = {
         email: emailValue
@@ -70,7 +73,7 @@ export const UserProfileData = () => {
           setUserDefaultData({
             name: user.name,
             email: user.email,
-            pass: ''
+            password: ''
           });
           setNameValue(user.name);
           setEmailValue(user.email);
@@ -82,11 +85,11 @@ export const UserProfileData = () => {
     }
   };
 
-  const cancel = e => {
+  const cancel = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    setNameValue(userDefaultData.name);
-    setEmailValue(userDefaultData.email);
-    setPassValue(userDefaultData.pass);
+    setNameValue(userDefaultData.name!);
+    setEmailValue(userDefaultData.email!);
+    setPassValue(userDefaultData.password!);
   };
 
   return (

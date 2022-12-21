@@ -6,6 +6,7 @@ import { UserProfileOrders } from "./user-profile-orders/user-profile-orders";
 import { Switch, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logoutUserRequest } from "../../services/actions/register-login-user";
+import { AnyAction } from "redux";
 
 export const UserProfile = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ export const UserProfile = () => {
   const inactiveTextColor = "text text_type_main-medium text_color_inactive";
   
   const onLogoutClick = () => {
-    dispatch(logoutUserRequest());
+    dispatch(logoutUserRequest() as unknown as AnyAction);
   }
 
   return (
