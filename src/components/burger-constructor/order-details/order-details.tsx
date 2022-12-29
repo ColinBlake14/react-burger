@@ -1,11 +1,10 @@
 import React from "react";
 import styles from './order-details.module.css';
 import orderAcceptedImg from "../../../images/orderAccepted.png";
-import { useSelector } from 'react-redux';
-import { TRootState } from "../../../services/reducers";
+import { useAppSelector } from "../../../utils/hooks";
 
 export const OrderDetails = () => {
-  const { orderNum, isLoading, hasError, hasData } = useSelector((store: TRootState) => store.bconstructor)
+  const { orderNum, isLoading, hasError, hasData } = useAppSelector(store=> store.bconstructor);
   const loadingText = 'Загрузка...';
   const errorText = 'Ошибка получения номера заказа';
   const unknowErrorText = 'Непредвиденная ошибка ...';

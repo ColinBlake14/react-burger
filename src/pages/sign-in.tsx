@@ -2,19 +2,17 @@ import React from "react";
 import styles from './pages.module.css';
 import { EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { loginUserRequest } from "../services/actions/register-login-user";
 import { Redirect, useLocation } from 'react-router-dom';
-import { TRootState } from "../services/reducers";
-import { AnyAction } from "redux";
 import * as H from 'history';
+import { useAppDispatch, useAppSelector } from "../utils/hooks";
 
 export const SignIn = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   let location = useLocation<{ from: H.Location }>();
   let { from } = location.state || { from: { pathname: "/" } };
 
-  const { loginSuccess, loginError } = useSelector((store: TRootState) => store.registerLoginUser);
+  const { loginSuccess, loginError } = useAppSelector(store => store.registerLoginUser);
 
   const [emailValue, setEmailValue] = React.useState<string>('');
   const [passValue, setPassValue] = React.useState<string>('');
@@ -25,7 +23,7 @@ export const SignIn = () => {
       email: emailValue,
       password: passValue
     }
-    dispatch(loginUserRequest(userData) as unknown as AnyAction);
+    dispatch(loginUserRequest(userData));
     setEmailValue('');
     setPassValue('');
   };

@@ -2,8 +2,7 @@ import React, { useState, useMemo } from "react";
 import styles from './burger-constructor.module.css';
 import { OrderDetails } from "./order-details/order-details";
 import { Modal } from "../app-modal/app-modal";
-import { getOrderNum } from "../../services/actions/burger-constructor";
-import { useDispatch, useSelector } from 'react-redux';
+import { getOrderNum, resetIngredientsAction, resetModalNumDataAction, setBunAction, setIngredientAction } from "../../services/actions/burger-constructor";
 import { useDrop } from "react-dnd";
 import { ConstructorItem } from "./constructor-item/constructor-item";
 import { useHistory } from "react-router-dom";
@@ -14,36 +13,28 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components'
 
 import { 
-  RESET_INGREDIENTS, 
-  RESET_MODAL_NUM_DATA,
-  SET_INGREDIENT,
-  SET_BUN
-} from "../../services/actions/burger-constructor";
-
-import { 
-  RESET_INGREDIENTS_COUNT,
-  RESET_BUNS_COUNT,
-  INCREASE_ITEM
+  increaseItemAction,
+  resetBunsCountAction,
+  resetIngredientsCountAction
 } from "../../services/actions/burger-ingredients";
-import { TRootState } from "../../services/reducers";
 import { TIngredientConstructor } from "../../utils/types";
-import { AnyAction } from "redux";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 
 export const BurgerConstructor = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
-  const { bun , ingredients, isModalVisible } = useSelector((store: TRootState) => store.bconstructor);
+  const { bun , ingredients, isModalVisible } = useAppSelector(store => store.bconstructor);
   
-  const isUserLoginSuccess = useSelector((store: TRootState) => store.registerLoginUser.loginSuccess);
+  const isUserLoginSuccess = useAppSelector(store => store.registerLoginUser.loginSuccess);
 
   const [{isHoverIngredient}, dropIngredient] = useDrop({
     accept: "ingredient",
     drop(item: TIngredientConstructor) {
-      dispatch({ type: INCREASE_ITEM, _id: item._id });
-      dispatch({ type: SET_INGREDIENT, ingredient: item });
+      dispatch(increaseItemAction(item._id));
+      dispatch(setIngredientAction(item));
     },
     collect: monitor => ({
       isHoverIngredient: monitor.isOver(),
@@ -53,9 +44,9 @@ export const BurgerConstructor = () => {
   const [{isHoverBun}, dropBun] = useDrop({
     accept: "bun",
     drop(item: TIngredientConstructor) {
-      dispatch({ type: RESET_BUNS_COUNT });
-      dispatch({ type: INCREASE_ITEM, _id: item._id });
-      dispatch({ type: SET_BUN, bun: item });
+      dispatch(resetBunsCountAction());
+      dispatch(increaseItemAction(item._id));
+      dispatch(setBunAction(item));
     },
     collect: monitor => ({
       isHoverBun: monitor.isOver(),
@@ -73,15 +64,15 @@ export const BurgerConstructor = () => {
           ingredients: [...orderIds]
         };
         
-        dispatch({ type: RESET_INGREDIENTS });
-        dispatch({ type: RESET_INGREDIENTS_COUNT });
-        dispatch(getOrderNum(orderIdsToSend) as unknown as AnyAction);
+        dispatch(resetIngredientsAction());
+        dispatch(resetIngredientsCountAction());
+        dispatch(getOrderNum(orderIdsToSend));
       }
     }
   };
 
   function handleCloseModal() {
-    dispatch({ type: RESET_MODAL_NUM_DATA });
+    dispatch(resetModalNumDataAction());
   };
 
   useMemo(() => {

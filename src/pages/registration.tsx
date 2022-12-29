@@ -2,15 +2,13 @@ import React from "react";
 import styles from './pages.module.css';
 import { EmailInput, PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { registerUserRequest } from '../services/actions/register-login-user';
-import { TRootState } from "../services/reducers";
-import { AnyAction } from "@reduxjs/toolkit";
+import { useAppDispatch, useAppSelector } from "../utils/hooks";
 
 export const Registration = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const registrationError = useSelector((store: TRootState) => store.registerLoginUser.registrationError);
+  const registrationError = useAppSelector(store => store.registerLoginUser.registrationError);
 
   const [nameValue, setNameValue] = React.useState<string>('');
   const [emailValue, setEmailValue] = React.useState<string>('');
@@ -23,7 +21,7 @@ export const Registration = () => {
       password: passValue,
       name: nameValue
     }
-    dispatch(registerUserRequest(userData) as unknown as AnyAction);
+    dispatch(registerUserRequest(userData));
     setNameValue('');
     setEmailValue('');
     setPassValue('');

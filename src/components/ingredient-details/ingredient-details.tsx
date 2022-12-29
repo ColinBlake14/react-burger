@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from "react"
 import styles from './ingredient-details.module.css';
-import { useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
-import { TRootState } from "../../services/reducers";
 import { TIngredient } from "../../utils/types";
+import { useAppSelector } from "../../utils/hooks";
 
 export const IngredientDetails = () => {
   const { id } = useParams<{id: string}>();
   const [ingredientData, setIngredientData] = useState<TIngredient>();
 
-  const ingredientsData: ReadonlyArray<TIngredient> | null = useSelector((store: TRootState) => store.ingredients.items);
+  const ingredientsData: ReadonlyArray<TIngredient> | null = useAppSelector(store => store.ingredients.items);
 
   useEffect(() => {
     if (ingredientsData) {

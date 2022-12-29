@@ -10,13 +10,6 @@ import { TForgotResetPassActions } from '../actions/forgot-reset-pass';
 
 export type TApplicationActions = TIngredientsActions | TConstructorActions | TRegisterLoginUserActions | TForgotResetPassActions;
 
-export type TRootState = {
-  ingredients: ReturnType<typeof ingredientsReducer>,
-  bconstructor: ReturnType<typeof bconstructorReducer>,
-  registerLoginUser: ReturnType<typeof registerLoginUserReducer>,
-  forgotResetPass: ReturnType<typeof forgotResetPassReducer>
-};
-
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   bconstructor: bconstructorReducer,

@@ -145,7 +145,7 @@ export const authUserFailedAction = (): IAuthUserFailedAction => ({
   type: AUTH_USER_FAILED
 });
 
-export const seyUserDataAction = (user: TUserLogin): ISetUserDataAction => ({
+export const setUserDataAction = (user: TUserLogin): ISetUserDataAction => ({
   type: SET_USER_DATA,
   user
 });

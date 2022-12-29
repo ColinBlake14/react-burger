@@ -4,12 +4,11 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import { UserProfileData } from "./user-profile-data/user-profile-data";
 import { UserProfileOrders } from "./user-profile-orders/user-profile-orders";
 import { Switch, Route } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { logoutUserRequest } from "../../services/actions/register-login-user";
-import { AnyAction } from "redux";
+import { useAppDispatch } from "../../utils/hooks";
 
 export const UserProfile = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { path, url } = useRouteMatch();
 
   const isOrders = !!useRouteMatch(`${path}/orders`);
@@ -19,7 +18,7 @@ export const UserProfile = () => {
   const inactiveTextColor = "text text_type_main-medium text_color_inactive";
   
   const onLogoutClick = () => {
-    dispatch(logoutUserRequest() as unknown as AnyAction);
+    dispatch(logoutUserRequest());
   }
 
   return (

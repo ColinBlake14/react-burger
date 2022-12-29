@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import styles from './constructor-item.module.css';
-import { useDispatch } from 'react-redux';
 import { useDrop, useDrag } from "react-dnd";
 
 import { 
@@ -9,16 +8,17 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components'
 
 import { 
-  DELETE_BUN, 
-  DELETE_INGREDIENT,
-  MOVE_INGREDIENT
+  deleteBunAction,
+  deleteIngredientAction,
+  moveIngredientAction,
 } from "../../../services/actions/burger-constructor";
 
 import { 
-  DECREASE_ITEM, 
-  RESET_BUNS_COUNT
+  decreaseItemAction, 
+  resetBunsCountAction,
 } from "../../../services/actions/burger-ingredients";
 import { TIngredientConstructor } from "../../../utils/types";
+import { useAppDispatch } from "../../../utils/hooks";
 
 type TConstructorItem = {
   itemData: TIngredientConstructor,
@@ -30,7 +30,7 @@ type TConstructorItem = {
 }
 
 export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, id}: TConstructorItem) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ handlerId }, drop] = useDrop({
@@ -66,7 +66,7 @@ export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, i
         return;
       };
       
-      dispatch({ type: MOVE_INGREDIENT, fromIndex: dragIndex, toIndex: hoverIndex });
+      dispatch(moveIngredientAction(dragIndex, hoverIndex!));
       item.index = hoverIndex;
     },
   })
@@ -83,11 +83,11 @@ export const ConstructorItem = ({itemData, pos, isLocked, classNameAdd, index, i
 
   const onClick = () => {
     if (itemData.type === "bun") {
-      dispatch({ type: DELETE_BUN });
-      dispatch({ type: RESET_BUNS_COUNT });
+      dispatch(deleteBunAction());
+      dispatch(resetBunsCountAction());
     } else {
-      dispatch({ type: DELETE_INGREDIENT, uuid: itemData.uuid });
-      dispatch({ type: DECREASE_ITEM, _id: itemData._id });
+      dispatch(deleteIngredientAction(itemData.uuid));
+      dispatch(decreaseItemAction(itemData._id));
     }
   }
 
