@@ -33,12 +33,12 @@ export const UserProfileData = () => {
       dispatch(authUserRequest() as unknown as AnyAction);
     } else {
       setUserDefaultData({
-        name: userStoreData.name,
-        email: userStoreData.email,
+        name: userStoreData!.name,
+        email: userStoreData!.email,
         password: ''
       });
-      setNameValue(userStoreData.name);
-      setEmailValue(userStoreData.email);
+      setNameValue(userStoreData!.name);
+      setEmailValue(userStoreData!.email);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

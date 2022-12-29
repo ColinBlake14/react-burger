@@ -4,8 +4,18 @@ import {
   FORGOT_PASS_FAILED,
   RESET_PASS_REQUEST,
   RESET_PASS_SUCCESS,
-  RESET_PASS_FAILED
- } from "../actions/forgot-reset-pass";
+  RESET_PASS_FAILED,
+  TForgotResetPassActions
+} from "../actions/forgot-reset-pass";
+
+export type TForgotResetPassState = {
+  forgotPasswordRequest: boolean,
+  forgotPasswordSuccess: boolean,
+  forgotPasswordError: boolean,
+  resetPasswordRequest: boolean,
+  resetPasswordSuccess: boolean,
+  resetPasswordError: boolean
+}
 
 const initialState = {
   forgotPasswordRequest: false,
@@ -16,7 +26,7 @@ const initialState = {
   resetPasswordError: false
 }
 
-export const forgotResetPassReducer = (state = initialState, action) => {
+export const forgotResetPassReducer = (state = initialState, action: TForgotResetPassActions) => {
   switch (action.type) {
     case FORGOT_PASS_REQUEST: {
       return {

@@ -9,7 +9,7 @@ export const IngredientDetails = () => {
   const { id } = useParams<{id: string}>();
   const [ingredientData, setIngredientData] = useState<TIngredient>();
 
-  const ingredientsData: Array<TIngredient> | null = useSelector((store: TRootState) => store.ingredients.items);
+  const ingredientsData: ReadonlyArray<TIngredient> | null = useSelector((store: TRootState) => store.ingredients.items);
 
   useEffect(() => {
     if (ingredientsData) {

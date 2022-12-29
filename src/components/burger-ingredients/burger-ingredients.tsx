@@ -20,7 +20,7 @@ export const BurgerIngredients = () => {
   const sauceSection = useRef<HTMLDivElement>(null);
   const mainSection = useRef<HTMLDivElement>(null);
   
-  const ingredientsData: Array<TIngredient> = useSelector((store: TRootState) => store.ingredients.items);
+  const ingredientsData: ReadonlyArray<TIngredient> = useSelector((store: TRootState) => store.ingredients.items);
   const { hasData, currentTab } = useSelector((store: TRootState) => store.ingredients);
 
   function scrollToSection(num: number) {

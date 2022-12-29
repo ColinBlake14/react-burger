@@ -1,3 +1,4 @@
+import { TUserLogin } from "../../utils/types";
 import { 
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
@@ -11,10 +12,24 @@ import {
   SET_USER_DATA,
   AUTH_USER_REQUEST,
   AUTH_USER_SUCCESS,
-  AUTH_USER_FAILED
- } from "../actions/register-login-user";
+  AUTH_USER_FAILED,
+  TRegisterLoginUserActions
+} from "../actions/register-login-user";
 
-const initialState = {
+export type TRegisterLoginUserState = {
+  user: TUserLogin | null,
+  registrationRequest: boolean,
+  registrationError: boolean,
+  loginRequest: boolean,
+  loginSuccess: boolean,
+  loginError: boolean,
+  logoutRequest: boolean,
+  logoutError: boolean,
+  authRequest: boolean,
+  authChecked: boolean
+}
+
+const initialState: TRegisterLoginUserState = {
   user: null,
   registrationRequest: false,
   registrationError: false,
@@ -27,7 +42,7 @@ const initialState = {
   authChecked: false
 }
 
-export const registerLoginUserReducer = (state = initialState, action) => {
+export const registerLoginUserReducer = (state = initialState, action: TRegisterLoginUserActions) => {
   switch (action.type) {
     case REGISTER_USER_REQUEST: {
       return {

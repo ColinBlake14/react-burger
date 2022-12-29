@@ -6,18 +6,25 @@ import reportWebVitals from './reportWebVitals';
 import '@ya.praktikum/react-developer-burger-ui-components';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import { rootReducer } from './services/reducers';
+import { rootReducer, TApplicationActions } from './services/reducers';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { BrowserRouter } from 'react-router-dom';
+import { ThunkAction } from 'redux-thunk';
+import { Action, ActionCreator } from 'redux';
 
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
-export type IRootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+export type AppThunk<ReturnType = void> = ActionCreator<
+  ThunkAction<ReturnType, Action, RootState, TApplicationActions>
+>;
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <BrowserRouter>
     <React.StrictMode>
