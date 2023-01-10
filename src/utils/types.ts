@@ -20,7 +20,7 @@ export type TIngredientConstructor = {
   price: number,
   image: string,
   uuid: string
-}
+};
 
 export type TOrderIds = {
   ingredients: Array<string>
@@ -37,7 +37,7 @@ export type TUserLogin = Omit<TUserData, 'password'>;
 export type TUserReset = {
   password: string,
   token: string
-}
+};
 
 export type TOrderResponse = {
   name: string,
@@ -45,4 +45,26 @@ export type TOrderResponse = {
   order: {
     number: number
   }
-}
+};
+
+export enum WsStatus {
+  CONNECTING = 'CONNECTING...',
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE'
+};
+
+export type TWsOrderData = {
+  ingredients: Array<string>,
+  _id: string,
+  status: string,
+  number: number,
+  createdAt: string,
+  updatedAt: string
+};
+
+export type TWsData = {
+  success: boolean,
+  orders: Array<TWsOrderData>,
+  total: number,
+  totalToday: number
+};

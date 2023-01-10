@@ -12,10 +12,31 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { BrowserRouter } from 'react-router-dom';
 import { ThunkAction } from 'redux-thunk';
 import { Action, ActionCreator } from 'redux';
+import { socketMiddleware } from './services/socket-middleware/socket-middleware';
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+import { 
+  connect as LiveOrdersWsConnect,
+  disconnect as LiveOrdersWsDiconnect,
+  wsOpen as LiveOrdersWsOpen,
+  wsClose as LiveOrdersWsClose,
+  wsMessage as LiveOrdersWsMessage,
+  wsError as LiveOrdersWsError,
+  wsConnecting as LiveOrdersWsConnecting
+} from './services/actions/ws-actions';
 
-export type RootState = ReturnType<typeof store.getState>;
+const liveOrdersMiddleware = socketMiddleware({
+  wsConnect: LiveOrdersWsConnect,
+  wsDisconnect: LiveOrdersWsDiconnect,
+  wsConnecting: LiveOrdersWsConnecting,
+  onOpen: LiveOrdersWsOpen,
+  onClose: LiveOrdersWsClose,
+  onError: LiveOrdersWsError,
+  onMessage: LiveOrdersWsMessage,
+});
+
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, liveOrdersMiddleware)));
+
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 export type AppThunk<ReturnType = void> = ActionCreator<
   ThunkAction<ReturnType, Action, RootState, TApplicationActions>
