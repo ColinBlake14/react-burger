@@ -49,12 +49,14 @@ export const AppHeader = () => {
             </div>
           </Link>
 
-          <div className={`${styles.navigation__link} pt-4 pb-4 pl-5 pr-5 ml-2`}>
-          <ListIcon type={isFeed ? "primary" : "secondary"} />
-            <p className={isFeed ? mainTextColor : inactiveTextColor}>
-              Лента заказов
-            </p>
-          </div>
+          <Link to={{ pathname: `/feed` }} className={styles.link}>
+            <div className={`${styles.navigation__link} pt-4 pb-4 pl-5 pr-5 ml-2`}>
+            <ListIcon type={isFeed ? "primary" : "secondary"} />
+              <p className={isFeed ? mainTextColor : inactiveTextColor}>
+                Лента заказов
+              </p>
+            </div>
+          </Link>
         </div>
 
         

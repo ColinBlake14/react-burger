@@ -3,6 +3,7 @@ import { setCookie, getCookie } from "./cookies";
 import { TIngredient, TOrderIds, TOrderResponse, TUserData, TUserLogin, TUserReset } from "./types";
 
 const BASE_URL = 'https://norma.nomoreparties.space/api/';
+export const WS_URL_ORDERS_ALL = 'wss://norma.nomoreparties.space/orders/all';
 
 type TResponseData<T> = {
   success: boolean,

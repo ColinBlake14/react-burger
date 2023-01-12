@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useAppDispatch } from "../../../utils/hooks";
 import { connect as liveOrdersWsConnect, disconnect as liveOrdersWsDisconnect } from "../../../services/actions/ws-actions";
+import { WS_URL_ORDERS_ALL } from "../../../utils/api";
 
 export const UserProfileOrders = () => {
-const URL = 'wss://norma.nomoreparties.space/orders/all';
 const dispatch = useAppDispatch();
-const connect = () => dispatch(liveOrdersWsConnect(URL));
+const connect = () => dispatch(liveOrdersWsConnect(WS_URL_ORDERS_ALL));
 const disconnect = () => dispatch(liveOrdersWsDisconnect());
 
 useEffect(() => {

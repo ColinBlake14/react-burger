@@ -6,6 +6,7 @@ import { UserProfile } from '../user-profile/user-profile';
 import { ProtectedRoute } from '../protected-route';
 import { AppHomePage } from '../app-home-page/app-home-page';
 import * as H from 'history';
+import { OrdersFeed } from '../orders-feed/orders-feed';
 
 export function AppSwitchRouter() {
   const location = useLocation<{ background: H.Location }>();
@@ -34,6 +35,9 @@ export function AppSwitchRouter() {
         </Route>
         <Route path="/ingredients/:id" exact={true}>
           <ModalIngredient />
+        </Route>
+        <Route path="/feed" exact={true}>
+          <OrdersFeed />
         </Route>
         <Route>
           <NotFound404 />
