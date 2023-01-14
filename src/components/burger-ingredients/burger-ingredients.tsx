@@ -2,39 +2,38 @@ import React, { useRef, useMemo } from "react";
 import styles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useInView } from "react-intersection-observer";
-import { useDispatch, useSelector } from 'react-redux';
 import { IngredientCard } from "./ingredient-card/ingredient-card";
 import { Link, useLocation } from "react-router-dom";
 
 import { 
-  SET_CURRENT_TAB
+  setCurrentTabAction,
 } from "../../services/actions/burger-ingredients";
-import { TRootState } from "../../services/reducers";
 import { TIngredient } from "../../utils/types";
+import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 
 export const BurgerIngredients = () => {
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const bunSection = useRef<HTMLDivElement>(null);
   const sauceSection = useRef<HTMLDivElement>(null);
   const mainSection = useRef<HTMLDivElement>(null);
   
-  const ingredientsData: Array<TIngredient> = useSelector((store: TRootState) => store.ingredients.items);
-  const { hasData, currentTab } = useSelector((store: TRootState) => store.ingredients);
+  const ingredientsData: ReadonlyArray<TIngredient> = useAppSelector(store => store.ingredients.items);
+  const { hasData, currentTab } = useAppSelector(store => store.ingredients);
 
   function scrollToSection(num: number) {
     switch (num) {
       case 1:
-        dispatch({ type: SET_CURRENT_TAB, tab: 'one' });
+        dispatch(setCurrentTabAction('one'));
         bunSection.current!.scrollIntoView({ behavior: "smooth" });
         break;
       case 2:
-        dispatch({ type: SET_CURRENT_TAB, tab: 'two' });
+        dispatch(setCurrentTabAction('two'));
         sauceSection.current!.scrollIntoView({ behavior: "smooth" });
         break;
       case 3:
-        dispatch({ type: SET_CURRENT_TAB, tab: 'three' });
+        dispatch(setCurrentTabAction('three'));
         mainSection.current!.scrollIntoView({ behavior: "smooth" });
         break;
       default: break;
@@ -45,9 +44,9 @@ export const BurgerIngredients = () => {
     threshold: 0,
     onChange: (inView1) => {
       if (inView1) {
-        dispatch({ type: SET_CURRENT_TAB, tab: 'one' });
+        dispatch(setCurrentTabAction('one'));
       } else if (inView2) {
-        dispatch({ type: SET_CURRENT_TAB, tab: 'two' });
+        dispatch(setCurrentTabAction('two'));
       }
     }
   });
@@ -56,9 +55,9 @@ export const BurgerIngredients = () => {
     threshold: 0,
     onChange: (inView2) => {
       if (!inView2 && inView3) {
-        dispatch({ type: SET_CURRENT_TAB, tab: 'three' });
+        dispatch(setCurrentTabAction('three'));
       } else if (inView2 && inView3) {
-        dispatch({ type: SET_CURRENT_TAB, tab: 'two' });
+        dispatch(setCurrentTabAction('two'));
       }
     }
   });

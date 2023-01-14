@@ -1,3 +1,5 @@
+import { TIngredient } from "../../utils/types";
+import { TIngredientsActions } from "../actions/burger-ingredients";
 import { 
   INCREASE_ITEM,
   DECREASE_ITEM,
@@ -9,7 +11,15 @@ import {
   SET_CURRENT_TAB
  } from "../actions/burger-ingredients";
 
- const initialState = {
+export type TBurgerIngredientsState = {
+  items: ReadonlyArray<TIngredient>,
+  hasError: boolean,
+  isLoading: boolean,
+  hasData: boolean,
+  currentTab: string
+}
+
+ const initialState: TBurgerIngredientsState = {
   items: [],
   hasError: false,
   isLoading: false,
@@ -17,7 +27,7 @@ import {
   currentTab: 'one'
  }
 
- export const ingredientsReducer = (state = initialState, action) => {
+ export const ingredientsReducer = (state = initialState, action: TIngredientsActions): TBurgerIngredientsState => {
   switch (action.type) {
     case GET_ITEMS_REQUEST: {
       return {

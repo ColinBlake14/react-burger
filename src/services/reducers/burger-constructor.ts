@@ -1,3 +1,4 @@
+import { TIngredientConstructor } from "../../utils/types";
 import { 
   SET_BUN, 
   DELETE_BUN, 
@@ -8,10 +9,21 @@ import {
   GET_ORDER_NUM_SUCCESS,
   GET_ORDER_NUM_FAILED,
   RESET_MODAL_NUM_DATA,
-  MOVE_INGREDIENT
+  MOVE_INGREDIENT,
+  TConstructorActions
 } from "../actions/burger-constructor";
 
-const initialState = {
+export type TBurgerConstructorState = {
+  bun: TIngredientConstructor | null,
+  ingredients: ReadonlyArray<TIngredientConstructor>,
+  orderNum: number,
+  isModalVisible: boolean,
+  hasError: boolean, 
+  isLoading: boolean,
+  hasData: boolean
+}
+
+const initialState: TBurgerConstructorState = {
   bun: null,
   ingredients: [],
   orderNum: 0,
@@ -21,7 +33,7 @@ const initialState = {
   hasData: false
  }
 
- export const bconstructorReducer = (state = initialState, action) => {
+ export const bconstructorReducer = (state = initialState, action: TConstructorActions) => {
   switch (action.type) {
     case SET_BUN: {
       return {

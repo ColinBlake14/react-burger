@@ -3,11 +3,10 @@ import { BurgerConstructor } from '../burger-constructor/burger-constructor';
 import { BurgerIngredients } from '../burger-ingredients/burger-ingredients';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { useSelector } from 'react-redux';
-import { TRootState } from '../../services/reducers';
+import { useAppSelector } from '../../utils/hooks';
 
 export function AppHomePage() {
-  const {isLoading, hasError} = useSelector((store: TRootState) => store.ingredients);
+  const {isLoading, hasError} = useAppSelector(store => store.ingredients);
 
   return (
     <>

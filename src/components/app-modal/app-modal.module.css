@@ -27,6 +27,16 @@
   z-index: 1000;
 }
 
+.modal__feed {
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1C1C21;
+  border-radius: 40px;
+  z-index: 1000;
+}
+
 .header {
   width: 640px;
   height: 64px;

@@ -2,17 +2,15 @@ import React, { useEffect } from "react";
 import styles from './pages.module.css';
 import { EmailInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { forgotPasswordRequest } from "../services/actions/forgot-reset-pass";
 import { useHistory } from 'react-router-dom'; 
-import { TRootState } from "../services/reducers";
-import { AnyAction } from "redux";
+import { useAppDispatch, useAppSelector } from "../utils/hooks";
 
 export const ForgotPassword = () => {
   const history = useHistory(); 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const {forgotPasswordSuccess, forgotPasswordError} = useSelector((store: TRootState) => store.forgotResetPass);
+  const {forgotPasswordSuccess, forgotPasswordError} = useAppSelector(store => store.forgotResetPass);
 
   const [emailValue, setEmailValue] = React.useState<string>('');
 
@@ -21,7 +19,7 @@ export const ForgotPassword = () => {
     const userEmail = {
       email: emailValue
     }
-    dispatch(forgotPasswordRequest(userEmail) as unknown as AnyAction);
+    dispatch(forgotPasswordRequest(userEmail));
     setEmailValue('');
   };
 

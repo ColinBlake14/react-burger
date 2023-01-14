@@ -6,18 +6,66 @@ import reportWebVitals from './reportWebVitals';
 import '@ya.praktikum/react-developer-burger-ui-components';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import { rootReducer } from './services/reducers';
+import { rootReducer, TApplicationActions } from './services/reducers';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { BrowserRouter } from 'react-router-dom';
+import { ThunkAction } from 'redux-thunk';
+import { Action, ActionCreator } from 'redux';
+import { socketMiddleware } from './services/socket-middleware/socket-middleware';
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+import { 
+  connect as LiveOrdersWsConnect,
+  disconnect as LiveOrdersWsDiconnect,
+  wsOpen as LiveOrdersWsOpen,
+  wsClose as LiveOrdersWsClose,
+  wsMessage as LiveOrdersWsMessage,
+  wsError as LiveOrdersWsError,
+  wsConnecting as LiveOrdersWsConnecting
+} from './services/actions/ws-actions';
 
-export type IRootState = ReturnType<typeof rootReducer>;
+import { 
+  connect as LiveOrdersWsProfileConnect,
+  disconnect as LiveOrdersWsProfileDiconnect,
+  wsOpen as LiveOrdersWsProfileOpen,
+  wsClose as LiveOrdersWsProfileClose,
+  wsMessage as LiveOrdersWsProfileMessage,
+  wsError as LiveOrdersWsProfileError,
+  wsConnecting as LiveOrdersWsProfileConnecting
+} from './services/actions/ws-profile-actions';
+
+const liveOrdersMiddleware = socketMiddleware({
+  wsConnect: LiveOrdersWsConnect,
+  wsDisconnect: LiveOrdersWsDiconnect,
+  wsConnecting: LiveOrdersWsConnecting,
+  onOpen: LiveOrdersWsOpen,
+  onClose: LiveOrdersWsClose,
+  onError: LiveOrdersWsError,
+  onMessage: LiveOrdersWsMessage,
+});
+
+const liveOrdersProfileMiddleware = socketMiddleware({
+  wsConnect: LiveOrdersWsProfileConnect,
+  wsDisconnect: LiveOrdersWsProfileDiconnect,
+  wsConnecting: LiveOrdersWsProfileConnecting,
+  onOpen: LiveOrdersWsProfileOpen,
+  onClose: LiveOrdersWsProfileClose,
+  onError: LiveOrdersWsProfileError,
+  onMessage: LiveOrdersWsProfileMessage,
+});
+
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, liveOrdersMiddleware, liveOrdersProfileMiddleware)));
+
+export type RootState = ReturnType<typeof rootReducer>;
+export type AppDispatch = typeof store.dispatch;
+export type AppThunk<ReturnType = void> = ActionCreator<
+  ThunkAction<ReturnType, Action, RootState, TApplicationActions>
+>;
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <BrowserRouter>
     <React.StrictMode>

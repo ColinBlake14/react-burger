@@ -1,7 +1,6 @@
 import { Redirect, Route, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { TRootState } from '../services/reducers';
 import * as H from 'history';
+import { useAppSelector } from '../utils/hooks';
 
 type TProtectedRoute = {
   children: React.ReactNode,
@@ -14,8 +13,8 @@ export const ProtectedRoute = ({ children, onlyUnAuth = false, ...rest }: TProte
   const location = useLocation<{ from: H.Location }>();
   let { from } = location.state || { from: { pathname: "/" } };
 
-  const isAuthChecked = useSelector((store: TRootState) => store.registerLoginUser.authChecked);
-  const isUserLoaded = useSelector((store: TRootState) => store.registerLoginUser.loginSuccess);
+  const isAuthChecked = useAppSelector(store => store.registerLoginUser.authChecked);
+  const isUserLoaded = useAppSelector(store => store.registerLoginUser.loginSuccess);
 
   if (!isAuthChecked) {
     return null;

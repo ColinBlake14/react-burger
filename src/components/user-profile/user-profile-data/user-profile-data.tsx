@@ -2,17 +2,15 @@ import React, { useEffect } from "react";
 import styles from './user-profile-data.module.css';
 import { EmailInput, PasswordInput, Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { patchUser } from "../../../utils/api";
-import { useDispatch, useSelector } from 'react-redux';
-import { SET_USER_DATA, authUserRequest } from "../../../services/actions/register-login-user";
-import { TRootState } from "../../../services/reducers";
+import { authUserRequest, setUserDataAction } from "../../../services/actions/register-login-user";
 import { TUserData } from "../../../utils/types";
-import { AnyAction } from "redux";
+import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
 
 export const UserProfileData = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const isUserLoginSuccess = useSelector((store: TRootState) => store.registerLoginUser.loginSuccess);
-  const userStoreData = useSelector((store: TRootState) => store.registerLoginUser.user);
+  const isUserLoginSuccess = useAppSelector(store => store.registerLoginUser.loginSuccess);
+  const userStoreData = useAppSelector(store => store.registerLoginUser.user);
 
   const [nameValue, setNameValue] = React.useState<string>('');
   const [emailValue, setEmailValue] = React.useState<string>('');
@@ -30,15 +28,15 @@ export const UserProfileData = () => {
 
   useEffect(() => {
     if (!isUserLoginSuccess) {
-      dispatch(authUserRequest() as unknown as AnyAction);
+      dispatch(authUserRequest());
     } else {
       setUserDefaultData({
-        name: userStoreData.name,
-        email: userStoreData.email,
+        name: userStoreData!.name,
+        email: userStoreData!.email,
         password: ''
       });
-      setNameValue(userStoreData.name);
-      setEmailValue(userStoreData.email);
+      setNameValue(userStoreData!.name);
+      setEmailValue(userStoreData!.email);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -78,7 +76,7 @@ export const UserProfileData = () => {
           setNameValue(user.name);
           setEmailValue(user.email);
           
-          dispatch({ type: SET_USER_DATA, user: user });
+          dispatch(setUserDataAction(user));
       }).catch(err => {
         console.log(err);
       })

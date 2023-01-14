@@ -2,17 +2,15 @@ import React, { useEffect } from "react";
 import styles from './pages.module.css';
 import { PasswordInput, Button, Input } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { resetPasswordRequest } from "../services/actions/forgot-reset-pass";
 import { useHistory } from 'react-router-dom'; 
-import { TRootState } from "../services/reducers";
-import { AnyAction } from "redux";
+import { useAppDispatch, useAppSelector } from "../utils/hooks";
 
 export const ResetPassword = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
-  const {forgotPasswordSuccess, resetPasswordSuccess, resetPasswordError} = useSelector((store: TRootState) => store.forgotResetPass);
+  const {forgotPasswordSuccess, resetPasswordSuccess, resetPasswordError} = useAppSelector(store => store.forgotResetPass);
 
   const [codeValue, setCodeValue] = React.useState<string>('');
   const [passValue, setPassValue] = React.useState<string>('');
@@ -23,7 +21,7 @@ export const ResetPassword = () => {
       password: passValue,
       token: codeValue
     }
-    dispatch(resetPasswordRequest(userData) as unknown as AnyAction);
+    dispatch(resetPasswordRequest(userData));
     setCodeValue('');
     setPassValue('');
   };
