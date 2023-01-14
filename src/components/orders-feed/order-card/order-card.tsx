@@ -1,21 +1,19 @@
 import { useAppSelector } from '../../../utils/hooks';
 import { TIngredient, TWsOrderData } from '../../../utils/types';
-import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './order-card.module.css';
 
 type TOrderCardData = {
-  orderData: TWsOrderData
+  orderData: TWsOrderData,
+  isInProfile: boolean
 }
 
-export const OrderCard = ({ orderData }: TOrderCardData) => {
+export const OrderCard = ({ orderData, isInProfile }: TOrderCardData) => {
   const ingredientsData: ReadonlyArray<TIngredient> = useAppSelector(store => store.ingredients.items);
   const picturesArray: Array<string> = [];
   let ingredientsPrice: number = 0;
 
-  const orderDate = new Date(orderData.createdAt);
-  const orderDateNumbers = orderDate.toLocaleDateString("ru-RU");
-  const orderHours = orderDate.getHours();
-  const orderMinutes = orderDate.getMinutes();
+  const dateFromServer = orderData.createdAt;
 
   ingredientsData.forEach(item => {
     orderData.ingredients.forEach(ingredient => {
@@ -32,10 +30,10 @@ export const OrderCard = ({ orderData }: TOrderCardData) => {
 
   return (
     <div className={`${styles.order__card} mr-2 mb-4`}>
-      <div className={`${styles.top__container} mt-6 mb-6`}>
+      <div className={`${styles.top__container} mb-6`}>
         <p className="text text_type_digits-default">{`#${orderData.number}`}</p>
         <p className="text text_type_main-default text_color_inactive">
-          {orderDateNumbers} в {orderHours}:{orderMinutes}
+          <FormattedDate date={new Date(dateFromServer)} />
         </p>
       </div>
 
@@ -43,6 +41,28 @@ export const OrderCard = ({ orderData }: TOrderCardData) => {
         <p className="text text_type_main-medium">
           {orderData.name}
         </p>
+
+        {isInProfile && <>
+          {orderData?.status === 'done' ?
+          <div className={styles.color__done}>
+            <p className="text text_type_main-default">
+              Выполнен
+            </p>
+          </div> 
+          : orderData?.status === 'pending' ?
+          <p className="text text_type_main-default">
+            Готовится
+          </p>
+          : orderData?.status === 'created' ?
+          <p className="text text_type_main-default">
+            Создан
+          </p>
+          :
+          <p className="text text_type_main-default">
+            Отменен
+          </p>
+          }
+        </>}
       </div>
 
       <div className={`${styles.bottom__container} mt-6`}>

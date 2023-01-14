@@ -4,11 +4,13 @@ import { useAppDispatch, useAppSelector } from "../../utils/hooks";
 import { connect as liveOrdersWsConnect, disconnect as liveOrdersWsDisconnect } from "../../services/actions/ws-actions";
 import { WS_URL_ORDERS_ALL } from "../../utils/api";
 import { OrderCard } from "./order-card/order-card";
+import { Link, useLocation } from "react-router-dom";
 
 export const OrdersFeed = () => {
   const dispatch = useAppDispatch();
   const connect = () => dispatch(liveOrdersWsConnect(WS_URL_ORDERS_ALL));
   const disconnect = () => dispatch(liveOrdersWsDisconnect());
+  const location = useLocation();
 
   const ordersData = useAppSelector(store => store.wsData.data);
   const [readyOrders, setReadyOrders] = useState<Array<number | undefined> | undefined>([]);
@@ -51,7 +53,18 @@ export const OrdersFeed = () => {
       <div className={styles.orders__container}>
         {
           ordersData ? 
-          ordersData.orders.map(order => <OrderCard orderData={order} key={order.number}/>) 
+          ordersData.orders.map(order => {
+            return (
+              <Link
+                key={order.number}
+                to={{
+                  pathname: `/feed/${order.number}`,
+                  state: { backgroundOrder: location }
+                }}
+              >
+                <OrderCard orderData={order} isInProfile={false} key={order.number}/>
+              </Link>
+            )})
           :
           <p className="text text_type_main-large">
             Загрузка...
@@ -59,6 +72,7 @@ export const OrdersFeed = () => {
         }
       </div>
 
+      { ordersData && 
       <div className={styles.overall__container}>
         <div className={styles.overall__header}>
           <p className="text text_type_main-medium">Готовы:</p>
@@ -114,7 +128,7 @@ export const OrdersFeed = () => {
           <p className="text text_type_main-medium">Выполнено за сегодня:</p>
           <p className={`${styles.numbers__shadow} text text_type_digits-large`}>{ordersData?.totalToday}</p>
         </div>
-      </div>
+      </div> }
     </div>
   )
 }

@@ -1,16 +1,25 @@
 import React, { useEffect } from "react";
-import { useAppDispatch } from "../../../utils/hooks";
-import { connect as liveOrdersWsConnect, disconnect as liveOrdersWsDisconnect } from "../../../services/actions/ws-actions";
-import { WS_URL_ORDERS_ALL } from "../../../utils/api";
+import styles from './user-profile-orders.module.css';
+import { useAppDispatch, useAppSelector } from "../../../utils/hooks";
+import { connect as liveOrdersWsProfileConnect, disconnect as liveOrdersWsProfileDisconnect } from "../../../services/actions/ws-profile-actions";
+import { WS_URL_ORDERS } from "../../../utils/api";
+import { getCookie } from "../../../utils/cookies";
+import { OrderCard } from "../../orders-feed/order-card/order-card";
+import { Link, useLocation } from "react-router-dom";
 
 export const UserProfileOrders = () => {
+const location = useLocation();
 const dispatch = useAppDispatch();
-const connect = () => dispatch(liveOrdersWsConnect(WS_URL_ORDERS_ALL));
-const disconnect = () => dispatch(liveOrdersWsDisconnect());
+const accessToken = getCookie('accessToken');
+const connect = () => dispatch(liveOrdersWsProfileConnect(`${WS_URL_ORDERS}?token=${accessToken}`));
+const disconnect = () => dispatch(liveOrdersWsProfileDisconnect());
+const ordersData = useAppSelector(store => store.wsProfileData.data);
 
 useEffect(() => {
-  connect();
-
+  if (accessToken) {
+    connect();
+  }
+  
   return () => {
     disconnect();
   }
@@ -18,8 +27,26 @@ useEffect(() => {
 }, []);
 
   return (
-    <>
-      <h1>Orders here soon!</h1>
-    </>
+    <div className={styles.container}>
+      {
+          ordersData ? 
+          [...ordersData.orders].reverse().map(order => {
+            return (
+              <Link
+                key={order.number}
+                to={{
+                  pathname: `/profile/orders/${order.number}`,
+                  state: { backgroundProfileOrder: location }
+                }}
+              >
+                <OrderCard orderData={order} isInProfile={true} key={order.number}/>
+              </Link>
+            )})
+          :
+          <p className="text text_type_main-large">
+            Загрузка...
+          </p>
+        }
+    </div>      
   )
 }

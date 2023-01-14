@@ -60,7 +60,8 @@ export type TWsOrderData = {
   name: string,
   number: number,
   createdAt: string,
-  updatedAt: string
+  updatedAt: string,
+  owner?: string
 };
 
 export type TWsData = {

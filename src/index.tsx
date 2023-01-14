@@ -24,6 +24,16 @@ import {
   wsConnecting as LiveOrdersWsConnecting
 } from './services/actions/ws-actions';
 
+import { 
+  connect as LiveOrdersWsProfileConnect,
+  disconnect as LiveOrdersWsProfileDiconnect,
+  wsOpen as LiveOrdersWsProfileOpen,
+  wsClose as LiveOrdersWsProfileClose,
+  wsMessage as LiveOrdersWsProfileMessage,
+  wsError as LiveOrdersWsProfileError,
+  wsConnecting as LiveOrdersWsProfileConnecting
+} from './services/actions/ws-profile-actions';
+
 const liveOrdersMiddleware = socketMiddleware({
   wsConnect: LiveOrdersWsConnect,
   wsDisconnect: LiveOrdersWsDiconnect,
@@ -34,7 +44,17 @@ const liveOrdersMiddleware = socketMiddleware({
   onMessage: LiveOrdersWsMessage,
 });
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, liveOrdersMiddleware)));
+const liveOrdersProfileMiddleware = socketMiddleware({
+  wsConnect: LiveOrdersWsProfileConnect,
+  wsDisconnect: LiveOrdersWsProfileDiconnect,
+  wsConnecting: LiveOrdersWsProfileConnecting,
+  onOpen: LiveOrdersWsProfileOpen,
+  onClose: LiveOrdersWsProfileClose,
+  onError: LiveOrdersWsProfileError,
+  onMessage: LiveOrdersWsProfileMessage,
+});
+
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk, liveOrdersMiddleware, liveOrdersProfileMiddleware)));
 
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;

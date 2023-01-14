@@ -9,13 +9,16 @@ import { TRegisterLoginUserActions } from '../actions/register-login-user';
 import { TForgotResetPassActions } from '../actions/forgot-reset-pass';
 import { wsReducer } from './ws-reducer';
 import { TWsActions } from '../actions/ws-actions';
+import { TWsProfileActions } from '../actions/ws-profile-actions';
+import { wsProfileReducer } from './ws-profile-reducer';
 
-export type TApplicationActions = TIngredientsActions | TConstructorActions | TRegisterLoginUserActions | TForgotResetPassActions | TWsActions;
+export type TApplicationActions = TIngredientsActions | TConstructorActions | TRegisterLoginUserActions | TForgotResetPassActions | TWsActions | TWsProfileActions;
 
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   bconstructor: bconstructorReducer,
   registerLoginUser: registerLoginUserReducer,
   forgotResetPass: forgotResetPassReducer,
-  wsData: wsReducer
+  wsData: wsReducer,
+  wsProfileData: wsProfileReducer
 });

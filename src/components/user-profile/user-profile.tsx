@@ -54,7 +54,7 @@ export const UserProfile = () => {
       </div>
 
       <Switch>
-        <Route path={`${path}/orders`}>
+        <Route path={`${path}/orders`} exact={true}>
           <UserProfileOrders/>
         </Route>
         <Route path={path} exact={true}>

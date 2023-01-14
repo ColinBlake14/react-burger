@@ -1,13 +1,19 @@
 import { checkResponse } from "./check-response";
 import { setCookie, getCookie } from "./cookies";
-import { TIngredient, TOrderIds, TOrderResponse, TUserData, TUserLogin, TUserReset } from "./types";
+import { TIngredient, TOrderIds, TOrderResponse, TUserData, TUserLogin, TUserReset, TWsOrderData } from "./types";
 
 const BASE_URL = 'https://norma.nomoreparties.space/api/';
+export const WS_URL_ORDERS = 'wss://norma.nomoreparties.space/orders';
 export const WS_URL_ORDERS_ALL = 'wss://norma.nomoreparties.space/orders/all';
 
 type TResponseData<T> = {
   success: boolean,
   data: T
+};
+
+type TResponseOrder = {
+  success: boolean,
+  orders: Array<TWsOrderData>
 };
 
 type TResponseWithMessage = {
@@ -42,6 +48,11 @@ function request<T>(url: string, options: RequestInit | undefined): Promise<T> {
 export const getIngredients = async () => {
   return request<TResponseData<Array<TIngredient>>>(BASE_URL + 'ingredients', undefined)
     .then(res => res.data);
+};
+
+export const getFeedOrder = async (orderNum: string) => {
+  return request<TResponseOrder>(BASE_URL + `orders/${orderNum}`, undefined)
+    .then(res => res.orders[0]);
 };
 
 export const postOrder = async (order: TOrderIds) => {
