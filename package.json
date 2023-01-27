@@ -34,7 +34,8 @@
     "cypress:open": "cypress open",
     "cypress": "cypress open cache clear",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "deploy-script": "npm run build && scp -r ./build/* colin-blake@84.201.166.10:/var/www/colin-blake.nomoredomainsclub.ru/html"
   },
   "eslintConfig": {
     "extends": [
