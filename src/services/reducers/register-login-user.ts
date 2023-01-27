@@ -29,7 +29,7 @@ export type TRegisterLoginUserState = {
   authChecked: boolean
 }
 
-const initialState: TRegisterLoginUserState = {
+export const initialState: TRegisterLoginUserState = {
   user: null,
   registrationRequest: false,
   registrationError: false,
@@ -85,7 +85,8 @@ export const registerLoginUserReducer = (state = initialState, action: TRegister
       return { 
         ...initialState,
         loginRequest: false,
-        loginError: true
+        loginError: true,
+        authChecked: true
       };
     }
     case LOGOUT_USER_REQUEST: {

@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "accessToken": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzODYzNGM2OWI1MThhMDAxYmI4OTQ2MyIsImlhdCI6MTY3NDY1ODE3NiwiZXhwIjoxNjc0NjU5Mzc2fQ.GxM_U345z1YjCtyKylpx7l6z69ZFZ6m-2ItodnyA3ms",
+  "refreshToken": "7245663d037755f76e200857d9a05790602e2b6f822b93aa4f7ef6269c07c87cac9247558bdde9be",
+  "user": {
+    "email": "colinblake@mail.ru",
+    "name": "Colin Blake"
+  }
+}

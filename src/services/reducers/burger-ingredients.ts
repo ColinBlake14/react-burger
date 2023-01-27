@@ -19,15 +19,15 @@ export type TBurgerIngredientsState = {
   currentTab: string
 }
 
- const initialState: TBurgerIngredientsState = {
+export const initialState: TBurgerIngredientsState = {
   items: [],
   hasError: false,
   isLoading: false,
   hasData: false,
   currentTab: 'one'
- }
+}
 
- export const ingredientsReducer = (state = initialState, action: TIngredientsActions): TBurgerIngredientsState => {
+export const ingredientsReducer = (state = initialState, action: TIngredientsActions): TBurgerIngredientsState => {
   switch (action.type) {
     case GET_ITEMS_REQUEST: {
       return {

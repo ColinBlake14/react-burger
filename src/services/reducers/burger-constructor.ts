@@ -23,7 +23,7 @@ export type TBurgerConstructorState = {
   hasData: boolean
 }
 
-const initialState: TBurgerConstructorState = {
+export const initialState: TBurgerConstructorState = {
   bun: null,
   ingredients: [],
   orderNum: 0,

@@ -23,7 +23,7 @@ export const IngredientCard = ( { ingredientData }: TIngredientData ) => {
   });
 
   return (
-    <div className={styles.card} ref={dragRef}>
+    <div className={styles.card} ref={dragRef} data-testid={ingredientData.name}>
       <img className={styles.card__img} src={ingredientData.image_large} alt={ingredientData.name}/>
       {ingredientData.__v !== 0 && <Counter extraClass={styles.counter} count={ingredientData.__v} size="default"/>}
       <div className={`${styles.price} pt-1 pb-1`}>

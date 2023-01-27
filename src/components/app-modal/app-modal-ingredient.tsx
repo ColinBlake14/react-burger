@@ -40,13 +40,17 @@ export const ModalIngredient = () => {
             <p className="text text_type_main-large">
               {header}
             </p>
-            <CloseIcon type="primary" onClick={onClose}/>
+            <div data-testid="close-icon">
+              <CloseIcon type="primary" onClick={onClose}/>
+            </div>
           </div>
         ) 
         :
         (
           <div className={`${styles.closeIcon__box} pt-15 pr-10`}>
-            <CloseIcon type="primary" onClick={onClose}/>
+            <div data-testid="close-icon">
+              <CloseIcon type="primary" onClick={onClose}/>
+            </div>
           </div>
         )}
         
