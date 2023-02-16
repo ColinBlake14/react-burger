@@ -100,7 +100,7 @@ export const BurgerConstructor = () => {
           `${styles.empty__bun} ${styles.empty__top__bun} ${styles.hovered}`
           :
           `${styles.empty__bun} ${styles.empty__top__bun}`
-        }>
+        } data-testid="top-bun-place">
         <p className="text text_type_main-default">
           Выберите булку для вашего бургера
         </p>
@@ -118,6 +118,7 @@ export const BurgerConstructor = () => {
           `${styles.ingredients__container__wrapper} pr-2 pl-4`
         } 
         ref={dropIngredient}
+        data-testid="ingredients-place"
       >
         {ingredients.map((item, index) => {
           return <ConstructorItem itemData={item} key={item.uuid} index={index} id={item.uuid}/>
@@ -134,6 +135,7 @@ export const BurgerConstructor = () => {
           `${styles.empty__bun} ${styles.empty__middle__bun}`
         } 
         ref={dropIngredient}
+        data-testid="ingredients-place"
       >
         <p className="text text_type_main-default">
           Начинка тоже не помешает
@@ -164,7 +166,7 @@ export const BurgerConstructor = () => {
 
   return (
     <section className={styles.container}>
-      <div className={`${styles.ingredients__container}`} ref={dropBun}>
+      <div className={`${styles.ingredients__container}`} ref={dropBun} data-testid="ingredients-container">
         {topBunContent}
         
         {ingredientsContent}

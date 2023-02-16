@@ -17,7 +17,7 @@ export type TForgotResetPassState = {
   resetPasswordError: boolean
 }
 
-const initialState = {
+export const initialState = {
   forgotPasswordRequest: false,
   forgotPasswordSuccess: false,
   forgotPasswordError: false,

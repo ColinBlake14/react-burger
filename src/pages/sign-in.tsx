@@ -1,6 +1,6 @@
 import React from "react";
 import styles from './pages.module.css';
-import { EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components'
+import { EmailInput, PasswordInput, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
 import { loginUserRequest } from "../services/actions/register-login-user";
 import { Redirect, useLocation } from 'react-router-dom';

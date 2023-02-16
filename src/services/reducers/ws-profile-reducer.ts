@@ -8,7 +8,7 @@ export type TWsState = {
   connectingError: string
 };
 
-const initialState: TWsState = {
+export const initialState: TWsState = {
   status: WsStatus.OFFLINE,
   data: null,
   connectingError: ''
