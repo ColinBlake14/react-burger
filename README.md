@@ -13,14 +13,14 @@ Click to visit [https://colin-blake.nomoredomainsclub.ru/](https://colin-blake.n
 
 #### React v18
 ```bash
-npm install react react-dom
+npm i react react-dom
 ```
 
 #### Redux, Redux-thunk, Redux-toolkit
 ```bash
 npm i react-redux@4.2.0
-npm install redux-thunk
-npm install @reduxjs/toolkit
+npm i redux-thunk
+npm i @reduxjs/toolkit
 ```
 
 #### React-router v5
@@ -30,7 +30,7 @@ npm i react-router@5.2.1
 
 #### React dnd v16
 ```bash
-npm install react-dnd react-dnd-html5-backend
+npm i react-dnd react-dnd-html5-backend
 ```
 
 #### TypeScript v4
