@@ -1,7 +1,5 @@
 # Stellar burgers
 
-Click to visit [https://colin-blake.nomoredomainsclub.ru/](https://colin-blake.nomoredomainsclub.ru/)
-
 ## Описание
 
 Учебный проект, в котором я знакомился с новыми технологиями и развивал старые навыки вместе с прекрасной командой Я.Практикума.
